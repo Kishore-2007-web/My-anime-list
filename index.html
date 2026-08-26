@@ -6,6 +6,11 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Anime Navigator - Pure Glass Watchlist</title>
 
+    <!-- Security & Privacy Meta Headers -->
+    <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self'; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com https://cdnjs.cloudflare.com; font-src 'self' https://fonts.gstatic.com https://cdnjs.cloudflare.com; img-src 'self' https: data:; media-src 'self'; object-src 'none'; base-uri 'self';">
+    <meta name="referrer" content="strict-origin-when-cross-origin">
+    <meta http-equiv="X-Content-Type-Options" content="nosniff">
+
     <!-- Google Fonts & Font Awesome Icons -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -20,7 +25,7 @@
 
     <!-- Background Video & Dark Overlay Layer -->
     <video id="bg-video" class="bg-video" autoplay loop muted playsinline>
-        <source id="bg-video-src" src="assets/samurai-sun-live-wallpaper.mp4" type="video/mp4">
+        <source id="bg-video-src" src="assets/samurai-katana-in-forest-cinematic-4k-live-wallpaper.mp4" type="video/mp4">
     </video>
     <div class="video-overlay"></div>
 
@@ -70,41 +75,57 @@
         <section class="controls-section">
             <div class="search-box">
                 <i class="fa-solid fa-magnifying-glass search-icon"></i>
-                <input type="text" id="search-input" class="search-input" placeholder="Search saved anime titles...">
+                <input type="text" id="search-input" class="search-input" placeholder="Search saved anime titles..." maxlength="150">
             </div>
             <div class="active-count-tag" id="active-list-count">0 Saved Anime</div>
         </section>
 
         <!-- ANIME GRID CONTAINER -->
         <main class="anime-grid" id="anime-grid">
-            <!-- Dynamic Simplified Anime Cards -->
+            <!-- Dynamic Simplified Anime Cards rendered defensively -->
         </main>
+
+        <!-- SITE FOOTER WITH PRIVACY & SECURITY LINKS -->
+        <footer class="site-footer">
+            <div class="footer-links">
+                <button class="footer-btn" id="open-privacy-modal-btn">
+                    <i class="fa-solid fa-shield-halved"></i> Privacy & Security
+                </button>
+                <button class="footer-btn" id="open-terms-modal-btn">
+                    <i class="fa-solid fa-file-contract"></i> Terms of Use
+                </button>
+            </div>
+            <div class="footer-note">Anime Navigator • Local Browser Bookmark Tool • Privacy First</div>
+        </footer>
 
     </div>
 
     <!-- SIMPLIFIED QUICK ADD MODAL (4 Fields Only) -->
     <div class="modal-backdrop" id="add-modal">
         <div class="modal-content">
-            <button class="modal-close-btn" id="close-add-modal">&times;</button>
+            <button class="modal-close-btn" id="close-add-modal" aria-label="Close modal">&times;</button>
 
             <div class="modal-header-text">
                 <h2><i class="fa-solid fa-link" style="color:#38bdf8;"></i> Add Anime Bookmark</h2>
-                <p>Save anime title, poster, category, and direct link to your watch site.</p>
+                <p>Save anime title, poster, category, and direct HTTPS watch link.</p>
             </div>
+
+            <!-- Accessible Error Alert Container -->
+            <div class="form-error-msg" id="add-error-msg" role="alert" aria-live="polite" style="display:none;"></div>
 
             <form id="add-anime-form" class="form-stack">
                 <div class="form-group">
-                    <label class="form-label">1. Anime Title *</label>
-                    <input type="text" id="add-title" class="form-input" placeholder="e.g. Solo Leveling" required>
+                    <label class="form-label" for="add-title">1. Anime Title *</label>
+                    <input type="text" id="add-title" class="form-input" placeholder="e.g. Solo Leveling" maxlength="150" required>
                 </div>
 
                 <div class="form-group">
-                    <label class="form-label">2. Poster Image URL</label>
-                    <input type="url" id="add-poster" class="form-input" placeholder="https://image-url.com/poster.jpg">
+                    <label class="form-label" for="add-poster">2. Poster Image URL (HTTPS)</label>
+                    <input type="url" id="add-poster" class="form-input" placeholder="https://image-url.com/poster.jpg" maxlength="2048">
                 </div>
 
                 <div class="form-group">
-                    <label class="form-label">3. Where to Add *</label>
+                    <label class="form-label" for="add-status">3. Where to Add *</label>
                     <select id="add-status" class="form-select" required>
                         <option value="Watching">Watching</option>
                         <option value="Going to watch">Going to watch</option>
@@ -114,9 +135,9 @@
                 </div>
 
                 <div class="form-group">
-                    <label class="form-label">4. Website Link to Watch *</label>
+                    <label class="form-label" for="add-link">4. Website Link to Watch (HTTPS) *</label>
                     <input type="url" id="add-link" class="form-input"
-                        placeholder="https://hianime.to/watch/solo-leveling" required>
+                        placeholder="https://hianime.to/watch/solo-leveling" maxlength="2048" required>
                 </div>
 
                 <button type="submit" class="btn-glass-submit">
@@ -129,27 +150,30 @@
     <!-- EDIT / MANAGE ANIME MODAL -->
     <div class="modal-backdrop" id="edit-modal">
         <div class="modal-content">
-            <button class="modal-close-btn" id="close-edit-modal">&times;</button>
+            <button class="modal-close-btn" id="close-edit-modal" aria-label="Close modal">&times;</button>
 
             <div class="modal-header-text">
                 <h2><i class="fa-solid fa-pen-to-square" style="color:#a855f7;"></i> Edit Anime Entry</h2>
             </div>
 
+            <!-- Accessible Error Alert Container -->
+            <div class="form-error-msg" id="edit-error-msg" role="alert" aria-live="polite" style="display:none;"></div>
+
             <form id="edit-anime-form" class="form-stack">
                 <input type="hidden" id="edit-id">
 
                 <div class="form-group">
-                    <label class="form-label">Anime Title</label>
-                    <input type="text" id="edit-title" class="form-input" required>
+                    <label class="form-label" for="edit-title">Anime Title</label>
+                    <input type="text" id="edit-title" class="form-input" maxlength="150" required>
                 </div>
 
                 <div class="form-group">
-                    <label class="form-label">Poster Image URL</label>
-                    <input type="url" id="edit-poster" class="form-input">
+                    <label class="form-label" for="edit-poster">Poster Image URL (HTTPS)</label>
+                    <input type="url" id="edit-poster" class="form-input" maxlength="2048">
                 </div>
 
                 <div class="form-group">
-                    <label class="form-label">Category Status</label>
+                    <label class="form-label" for="edit-status">Category Status</label>
                     <select id="edit-status" class="form-select" required>
                         <option value="Watching">Watching</option>
                         <option value="Going to watch">Going to watch</option>
@@ -159,8 +183,8 @@
                 </div>
 
                 <div class="form-group">
-                    <label class="form-label">Website Link</label>
-                    <input type="url" id="edit-link" class="form-input" required>
+                    <label class="form-label" for="edit-link">Website Link (HTTPS)</label>
+                    <input type="url" id="edit-link" class="form-input" maxlength="2048" required>
                 </div>
 
                 <div style="display: flex; gap: 1rem; margin-top: 1rem;">
@@ -172,6 +196,50 @@
                     </button>
                 </div>
             </form>
+        </div>
+    </div>
+
+    <!-- PRIVACY & SECURITY INFO MODAL -->
+    <div class="modal-backdrop" id="privacy-modal">
+        <div class="modal-content" style="max-width: 600px;">
+            <button class="modal-close-btn" id="close-privacy-modal" aria-label="Close modal">&times;</button>
+
+            <div class="modal-header-text">
+                <h2><i class="fa-solid fa-shield-halved" style="color:#10b981;"></i> Security & Privacy Policy</h2>
+            </div>
+
+            <div class="modal-scroll-body" style="display:flex; flex-direction:column; gap:1rem; font-size:0.88rem; color:var(--text-muted); line-height:1.6; max-height:60vh; overflow-y:auto; padding-right:0.5rem;">
+                <p><strong style="color:#fff;">1. Local Storage Only:</strong> All anime titles, poster image URLs, category statuses, and watch links are stored locally in your browser (`localStorage`). No server database, user accounts, or cloud storage exist.</p>
+
+                <p><strong style="color:#fff;">2. Zero Data Collection & Tracking:</strong> Anime Navigator does NOT use analytics, cookies, tracking pixels, advertisement networks, or user fingerprinting scripts.</p>
+
+                <p><strong style="color:#fff;">3. External Web Links:</strong> Saved watch links redirect to third-party external websites in a new tab with strict `noopener,noreferrer` tab isolation. External websites operate independently under their own privacy policies.</p>
+
+                <p><strong style="color:#fff;">4. Data Control & Deletion:</strong> You have full control over your data. You can delete individual entries using the edit menu or clear all saved data anytime by clearing your browser's site data.</p>
+
+                <p><strong style="color:#fff;">5. Security Reporting:</strong> Vulnerabilities or security concerns can be responsibly disclosed through our official GitHub repository issue tracker.</p>
+            </div>
+        </div>
+    </div>
+
+    <!-- TERMS OF USE MODAL -->
+    <div class="modal-backdrop" id="terms-modal">
+        <div class="modal-content" style="max-width: 600px;">
+            <button class="modal-close-btn" id="close-terms-modal" aria-label="Close modal">&times;</button>
+
+            <div class="modal-header-text">
+                <h2><i class="fa-solid fa-file-contract" style="color:#38bdf8;"></i> Terms of Use</h2>
+            </div>
+
+            <div class="modal-scroll-body" style="display:flex; flex-direction:column; gap:1rem; font-size:0.88rem; color:var(--text-muted); line-height:1.6; max-height:60vh; overflow-y:auto; padding-right:0.5rem;">
+                <p><strong style="color:#fff;">1. Personal Navigation Tool:</strong> Anime Navigator is a personal bookmark tool and web navigator. It does NOT host, store, stream, or distribute any anime video files or media content.</p>
+
+                <p><strong style="color:#fff;">2. User Responsibility:</strong> Users are responsible for the links they choose to save and launch. You agree not to intentionally save malicious or illegal URLs.</p>
+
+                <p><strong style="color:#fff;">3. Third-Party Content:</strong> Third-party streaming websites are independent entities. Anime Navigator has no control over external content, availability, or third-party site safety.</p>
+
+                <p><strong style="color:#fff;">4. Local Storage Disclaimer:</strong> Data is saved in browser `localStorage`. Clearing browser data or using private/incognito mode may result in local data loss.</p>
+            </div>
         </div>
     </div>
 
