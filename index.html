@@ -1,23 +1,168 @@
 <!DOCTYPE html>
 <html lang="en">
-
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>My anime list</title>
-    <link rel="stylesheet" href="style.css">
-</head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Anime Navigator - Pure Glass Watchlist</title>
 
+  <!-- Google Fonts & Font Awesome Icons -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+
+  <link rel="stylesheet" href="style.css">
+</head>
 <body>
-    <header>
-        <div><a href="#">Home</a></div>
-        <div><a href="#">Watching</a></div>
-        <div><a href="#">Going to watch</a></div>
-        <div><a href="#">Ongoing-follow-up</a></div>
-        <div><a href="#">Completed</a></div>
+
+  <!-- Background Video & Dark Overlay Layer -->
+  <video id="bg-video" autoplay loop muted playsinline poster="assets/hero_banner.png">
+    <source src="https://assets.mixkit.co/videos/preview/mixkit-stars-in-the-night-sky-4009-large.mp4" type="video/mp4">
+  </video>
+  <div class="video-overlay"></div>
+
+  <div class="app-container">
+
+    <!-- HEADER & CATEGORY NAVIGATOR -->
+    <header class="site-header">
+      <a href="#" class="brand-logo" id="brand-home-btn">
+        <div class="brand-icon"><i class="fa-solid fa-compass"></i></div>
+        <div class="brand-title">ANIME<span>NAVIGATOR</span></div>
+      </a>
+
+      <!-- Navigation Headers -->
+      <nav class="header-nav" id="header-nav">
+        <a class="nav-link active" data-nav="Home" id="nav-home">
+          <i class="fa-solid fa-house"></i> Home
+        </a>
+        <a class="nav-link" data-nav="Watching" id="nav-watching">
+          <i class="fa-solid fa-play"></i> Watching <span class="nav-badge" id="count-watching">0</span>
+        </a>
+        <a class="nav-link" data-nav="Going to watch" id="nav-going-to-watch">
+          <i class="fa-solid fa-bookmark"></i> Going to watch <span class="nav-badge" id="count-going">0</span>
+        </a>
+        <a class="nav-link" data-nav="Ongoing-follow-up" id="nav-ongoing">
+          <i class="fa-solid fa-rotate-right"></i> Ongoing-follow-up <span class="nav-badge" id="count-ongoing">0</span>
+        </a>
+        <a class="nav-link" data-nav="Completed" id="nav-completed">
+          <i class="fa-solid fa-circle-check"></i> Completed <span class="nav-badge" id="count-completed">0</span>
+        </a>
+      </nav>
+
+      <!-- Quick Add Button -->
+      <button class="btn-glass-primary" id="open-add-modal-btn">
+        <i class="fa-solid fa-plus"></i> Quick Add
+      </button>
     </header>
 
+    <!-- SEARCH & CONTROLS TOOLBAR -->
+    <section class="controls-section">
+      <div class="search-box">
+        <i class="fa-solid fa-magnifying-glass search-icon"></i>
+        <input type="text" id="search-input" class="search-input" placeholder="Search saved anime titles...">
+      </div>
+      <div class="active-count-tag" id="active-list-count">0 Saved Anime</div>
+    </section>
 
+    <!-- ANIME GRID CONTAINER -->
+    <main class="anime-grid" id="anime-grid">
+      <!-- Dynamic Simplified Anime Cards -->
+    </main>
+
+  </div>
+
+  <!-- SIMPLIFIED QUICK ADD MODAL (4 Fields Only) -->
+  <div class="modal-backdrop" id="add-modal">
+    <div class="modal-content">
+      <button class="modal-close-btn" id="close-add-modal">&times;</button>
+      
+      <div class="modal-header-text">
+        <h2><i class="fa-solid fa-link" style="color:#38bdf8;"></i> Add Anime Bookmark</h2>
+        <p>Save anime title, poster, category, and direct link to your watch site.</p>
+      </div>
+
+      <form id="add-anime-form" class="form-stack">
+        <div class="form-group">
+          <label class="form-label">1. Anime Title *</label>
+          <input type="text" id="add-title" class="form-input" placeholder="e.g. Solo Leveling" required>
+        </div>
+
+        <div class="form-group">
+          <label class="form-label">2. Poster Image URL</label>
+          <input type="url" id="add-poster" class="form-input" placeholder="https://image-url.com/poster.jpg">
+        </div>
+
+        <div class="form-group">
+          <label class="form-label">3. Where to Add *</label>
+          <select id="add-status" class="form-select" required>
+            <option value="Watching">Watching</option>
+            <option value="Going to watch">Going to watch</option>
+            <option value="Ongoing-follow-up">Ongoing-follow-up</option>
+            <option value="Completed">Completed</option>
+          </select>
+        </div>
+
+        <div class="form-group">
+          <label class="form-label">4. Website Link to Watch *</label>
+          <input type="url" id="add-link" class="form-input" placeholder="https://hianime.to/watch/solo-leveling" required>
+        </div>
+
+        <button type="submit" class="btn-glass-submit">
+          <i class="fa-solid fa-bookmark"></i> Save Anime Link
+        </button>
+      </form>
+    </div>
+  </div>
+
+  <!-- EDIT / MANAGE ANIME MODAL -->
+  <div class="modal-backdrop" id="edit-modal">
+    <div class="modal-content">
+      <button class="modal-close-btn" id="close-edit-modal">&times;</button>
+      
+      <div class="modal-header-text">
+        <h2><i class="fa-solid fa-pen-to-square" style="color:#a855f7;"></i> Edit Anime Entry</h2>
+      </div>
+
+      <form id="edit-anime-form" class="form-stack">
+        <input type="hidden" id="edit-id">
+        
+        <div class="form-group">
+          <label class="form-label">Anime Title</label>
+          <input type="text" id="edit-title" class="form-input" required>
+        </div>
+
+        <div class="form-group">
+          <label class="form-label">Poster Image URL</label>
+          <input type="url" id="edit-poster" class="form-input">
+        </div>
+
+        <div class="form-group">
+          <label class="form-label">Category Status</label>
+          <select id="edit-status" class="form-select" required>
+            <option value="Watching">Watching</option>
+            <option value="Going to watch">Going to watch</option>
+            <option value="Ongoing-follow-up">Ongoing-follow-up</option>
+            <option value="Completed">Completed</option>
+          </select>
+        </div>
+
+        <div class="form-group">
+          <label class="form-label">Website Link</label>
+          <input type="url" id="edit-link" class="form-input" required>
+        </div>
+
+        <div style="display: flex; gap: 1rem; margin-top: 1rem;">
+          <button type="submit" class="btn-glass-submit" style="flex: 1;">
+            <i class="fa-solid fa-floppy-disk"></i> Save Changes
+          </button>
+          <button type="button" id="delete-anime-btn" class="btn-glass-danger">
+            <i class="fa-solid fa-trash-can"></i> Delete
+          </button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <script src="app.js"></script>
 </body>
-
 </html>
