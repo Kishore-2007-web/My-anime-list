@@ -9,64 +9,8 @@ const WALLPAPERS = [
   "assets/moonlit-sanctuary-tranquil-waterfall-torii-gate-4k-live-wallpaper.mp4"
 ];
 
-const INITIAL_NAVIGATOR_DATA = [
-  {
-    id: "nav-1",
-    title: "Solo Leveling",
-    status: "Watching",
-    poster: "https://images.unsplash.com/photo-1578632767115-351597cf2477?q=80&w=800&auto=format&fit=crop",
-    link: "https://hianime.to"
-  },
-  {
-    id: "nav-2",
-    title: "Jujutsu Kaisen Season 2",
-    status: "Watching",
-    poster: "https://images.unsplash.com/photo-1607604276583-eef5d076aa5f?q=80&w=800&auto=format&fit=crop",
-    link: "https://crunchyroll.com"
-  },
-  {
-    id: "nav-3",
-    title: "Demon Slayer: Hashira Training",
-    status: "Watching",
-    poster: "https://images.unsplash.com/photo-1534447677768-be436bb09401?q=80&w=800&auto=format&fit=crop",
-    link: "https://hianime.to"
-  },
-  {
-    id: "nav-4",
-    title: "Frieren: Beyond Journey's End",
-    status: "Completed",
-    poster: "https://images.unsplash.com/photo-1518709268805-4e9042af9f23?q=80&w=800&auto=format&fit=crop",
-    link: "https://crunchyroll.com"
-  },
-  {
-    id: "nav-5",
-    title: "Chainsaw Man: Reze Arc",
-    status: "Going to watch",
-    poster: "https://images.unsplash.com/photo-1563089145-599997674d42?q=80&w=800&auto=format&fit=crop",
-    link: "https://hianime.to"
-  },
-  {
-    id: "nav-6",
-    title: "Attack on Titan: Final Season",
-    status: "Completed",
-    poster: "https://images.unsplash.com/photo-1578632767115-351597cf2477?q=80&w=800&auto=format&fit=crop",
-    link: "https://crunchyroll.com"
-  },
-  {
-    id: "nav-7",
-    title: "One Piece: Egghead Arc",
-    status: "Ongoing-follow-up",
-    poster: "https://images.unsplash.com/photo-1607604276583-eef5d076aa5f?q=80&w=800&auto=format&fit=crop",
-    link: "https://hianime.to"
-  },
-  {
-    id: "nav-8",
-    title: "Bleach: Thousand-Year Blood War",
-    status: "Ongoing-follow-up",
-    poster: "https://images.unsplash.com/photo-1618005182384-a83a8bd57fbe?q=80&w=800&auto=format&fit=crop",
-    link: "https://hianime.to"
-  }
-];
+// Empty default dataset - no mock cards as requested by user
+const INITIAL_NAVIGATOR_DATA = [];
 
 class AnimeNavigator {
   constructor() {
@@ -82,7 +26,7 @@ class AnimeNavigator {
   }
 
   loadState() {
-    const saved = localStorage.getItem("anime_navigator_list_v3");
+    const saved = localStorage.getItem("anime_navigator_list_v4");
     if (saved) {
       try {
         return JSON.parse(saved);
@@ -94,7 +38,7 @@ class AnimeNavigator {
   }
 
   saveState() {
-    localStorage.setItem("anime_navigator_list_v3", JSON.stringify(this.animeList));
+    localStorage.setItem("anime_navigator_list_v4", JSON.stringify(this.animeList));
     this.updateHeaderBadges();
   }
 
@@ -226,9 +170,9 @@ class AnimeNavigator {
     if (filtered.length === 0) {
       this.animeGrid.innerHTML = `
         <div class="empty-state">
-          <i class="fa-solid fa-ghost" style="font-size:2.5rem; color:var(--text-dim); margin-bottom:1rem;"></i>
-          <h3>No Anime Found</h3>
-          <p style="color:var(--text-muted); margin-top:0.5rem;">Click "Quick Add" to add anime titles and watch links.</p>
+          <i class="fa-solid fa-folder-open" style="font-size:2.5rem; color:var(--text-dim); margin-bottom:1rem;"></i>
+          <h3>Your Anime List is Empty</h3>
+          <p style="color:var(--text-muted); margin-top:0.5rem;">Click "+ Quick Add" in the top header to save your anime links.</p>
         </div>
       `;
       return;
