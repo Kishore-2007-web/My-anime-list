@@ -58,14 +58,17 @@ body {
   height: 100vh;
   object-fit: cover;
   z-index: -2;
-  filter: brightness(0.35) contrast(1.1);
+  filter: brightness(0.5) contrast(1.05);
   pointer-events: none;
+  background-color: #050508;
+  transition: opacity 0.5s ease;
 }
 
 .video-overlay {
   position: fixed;
   inset: 0;
-  background: radial-gradient(circle at center, rgba(8, 8, 14, 0.5) 0%, rgba(4, 4, 8, 0.85) 100%);
+  background: radial-gradient(circle at center, rgba(6, 6, 12, 0.35) 0%, rgba(3, 3, 6, 0.75) 100%),
+              linear-gradient(180deg, rgba(6, 6, 12, 0.4) 0%, rgba(3, 3, 6, 0.75) 100%);
   z-index: -1;
   pointer-events: none;
 }
@@ -207,6 +210,35 @@ nav.header-nav {
   color: #000;
   box-shadow: 0 0 20px rgba(56, 189, 248, 0.5);
   transform: translateY(-2px);
+}
+
+.btn-glass-secondary {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  background: rgba(255, 255, 255, 0.08);
+  color: #fff;
+  border: 1px solid var(--border-glass);
+  padding: 0.65rem 1.1rem;
+  border-radius: var(--radius-full);
+  font-family: var(--font-primary);
+  font-weight: 600;
+  font-size: 0.85rem;
+  cursor: pointer;
+  backdrop-filter: blur(10px);
+  transition: var(--transition-normal);
+}
+
+.btn-glass-secondary:hover {
+  background: rgba(255, 255, 255, 0.16);
+  border-color: rgba(255, 255, 255, 0.3);
+  transform: translateY(-2px);
+}
+
+/* Dropdown Options Dark Background Fix */
+select option {
+  background-color: #0d0d14;
+  color: #f8fafc;
 }
 
 /* ==========================================================================

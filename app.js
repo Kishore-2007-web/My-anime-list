@@ -2,6 +2,11 @@
    ANIME NAVIGATOR - APPLICATION LOGIC & STATE (app.js)
    ========================================================================== */
 
+const WALLPAPERS = [
+  "assets/samurai-katana-in-forest-cinematic-4k-live-wallpaper.mp4",
+  "assets/samurai-sun-live-wallpaper.mp4"
+];
+
 const INITIAL_NAVIGATOR_DATA = [
   {
     id: "nav-1",
@@ -66,8 +71,10 @@ class AnimeNavigator {
     this.animeList = this.loadState();
     this.currentNav = "Home";
     this.searchQuery = "";
+    this.currentWallpaperIndex = parseInt(localStorage.getItem("anime_navigator_wallpaper_idx")) || 0;
 
     this.initElements();
+    this.initVideoBackground();
     this.initEventListeners();
     this.render();
   }
@@ -94,10 +101,43 @@ class AnimeNavigator {
     this.searchInput = document.getElementById("search-input");
     this.headerNav = document.getElementById("header-nav");
     this.activeListCount = document.getElementById("active-list-count");
+    this.bgVideo = document.getElementById("bg-video");
+    this.bgVideoSrc = document.getElementById("bg-video-src");
 
     // Modals
     this.addModal = document.getElementById("add-modal");
     this.editModal = document.getElementById("edit-modal");
+  }
+
+  initVideoBackground() {
+    if (!this.bgVideo || !this.bgVideoSrc) return;
+    
+    // Set active wallpaper source
+    const targetSrc = WALLPAPERS[this.currentWallpaperIndex % WALLPAPERS.length];
+    if (this.bgVideoSrc.getAttribute("src") !== targetSrc) {
+      this.bgVideoSrc.setAttribute("src", targetSrc);
+      this.bgVideo.load();
+    }
+
+    // Force video playback
+    this.bgVideo.play().catch(err => {
+      console.log("Auto-play prevented or suspended:", err);
+    });
+  }
+
+  toggleWallpaper() {
+    this.currentWallpaperIndex = (this.currentWallpaperIndex + 1) % WALLPAPERS.length;
+    localStorage.setItem("anime_navigator_wallpaper_idx", this.currentWallpaperIndex);
+    
+    if (this.bgVideo && this.bgVideoSrc) {
+      this.bgVideo.style.opacity = "0.2";
+      setTimeout(() => {
+        this.bgVideoSrc.setAttribute("src", WALLPAPERS[this.currentWallpaperIndex]);
+        this.bgVideo.load();
+        this.bgVideo.play().catch(e => console.log(e));
+        this.bgVideo.style.opacity = "1";
+      }, 250);
+    }
   }
 
   initEventListeners() {
@@ -121,6 +161,12 @@ class AnimeNavigator {
       this.currentNav = "Home";
       this.render();
     });
+
+    // Wallpaper Switcher Button
+    const wallpaperBtn = document.getElementById("toggle-wallpaper-btn");
+    if (wallpaperBtn) {
+      wallpaperBtn.addEventListener("click", () => this.toggleWallpaper());
+    }
 
     // Search Input
     this.searchInput.addEventListener("input", (e) => {
@@ -208,7 +254,6 @@ class AnimeNavigator {
 
   attachCardEvents() {
     document.querySelectorAll(".anime-card").forEach(card => {
-      // Edit button click
       const editBtn = card.querySelector(".btn-edit-item");
       if (editBtn) {
         editBtn.addEventListener("click", (e) => {
@@ -218,7 +263,6 @@ class AnimeNavigator {
         });
       }
 
-      // Card click redirects to watch link in new tab!
       card.addEventListener("click", () => {
         const link = card.getAttribute("data-link");
         if (link) {
