@@ -3,7 +3,7 @@
 
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0">
     <title>Anime Navigator - Pure Glass Watchlist</title>
 
     <!-- Security & Privacy Meta Headers -->
@@ -24,7 +24,7 @@
 <body>
 
     <!-- Background Video & Dark Overlay Layer -->
-    <video id="bg-video" class="bg-video" autoplay loop muted playsinline>
+    <video id="bg-video" class="bg-video" autoplay loop muted playsinline preload="metadata">
         <source id="bg-video-src" src="assets/samurai-katana-in-forest-cinematic-4k-live-wallpaper.mp4" type="video/mp4">
     </video>
     <div class="video-overlay"></div>
@@ -61,7 +61,10 @@
             </nav>
 
             <!-- Action Controls -->
-            <div style="display: flex; gap: 0.75rem; align-items: center;">
+            <div class="header-actions">
+                <button class="btn-glass-secondary" id="toggle-perf-btn" title="Toggle Performance Mode">
+                    <i class="fa-solid fa-bolt"></i> <span id="perf-btn-label">Fast Mode</span>
+                </button>
                 <button class="btn-glass-secondary" id="toggle-wallpaper-btn" title="Switch Live Wallpaper Video">
                     <i class="fa-solid fa-clapperboard"></i> Wallpaper
                 </button>
@@ -110,7 +113,6 @@
                 <p>Save anime title, poster, category, and direct HTTPS watch link.</p>
             </div>
 
-            <!-- Accessible Error Alert Container -->
             <div class="form-error-msg" id="add-error-msg" role="alert" aria-live="polite" style="display:none;"></div>
 
             <form id="add-anime-form" class="form-stack">
@@ -156,7 +158,6 @@
                 <h2><i class="fa-solid fa-pen-to-square" style="color:#a855f7;"></i> Edit Anime Entry</h2>
             </div>
 
-            <!-- Accessible Error Alert Container -->
             <div class="form-error-msg" id="edit-error-msg" role="alert" aria-live="polite" style="display:none;"></div>
 
             <form id="edit-anime-form" class="form-stack">
@@ -208,15 +209,11 @@
                 <h2><i class="fa-solid fa-shield-halved" style="color:#10b981;"></i> Security & Privacy Policy</h2>
             </div>
 
-            <div class="modal-scroll-body" style="display:flex; flex-direction:column; gap:1rem; font-size:0.88rem; color:var(--text-muted); line-height:1.6; max-height:60vh; overflow-y:auto; padding-right:0.5rem;">
+            <div class="modal-scroll-body">
                 <p><strong style="color:#fff;">1. Local Storage Only:</strong> All anime titles, poster image URLs, category statuses, and watch links are stored locally in your browser (`localStorage`). No server database, user accounts, or cloud storage exist.</p>
-
                 <p><strong style="color:#fff;">2. Zero Data Collection & Tracking:</strong> Anime Navigator does NOT use analytics, cookies, tracking pixels, advertisement networks, or user fingerprinting scripts.</p>
-
                 <p><strong style="color:#fff;">3. External Web Links:</strong> Saved watch links redirect to third-party external websites in a new tab with strict `noopener,noreferrer` tab isolation. External websites operate independently under their own privacy policies.</p>
-
                 <p><strong style="color:#fff;">4. Data Control & Deletion:</strong> You have full control over your data. You can delete individual entries using the edit menu or clear all saved data anytime by clearing your browser's site data.</p>
-
                 <p><strong style="color:#fff;">5. Security Reporting:</strong> Vulnerabilities or security concerns can be responsibly disclosed through our official GitHub repository issue tracker.</p>
             </div>
         </div>
@@ -231,13 +228,10 @@
                 <h2><i class="fa-solid fa-file-contract" style="color:#38bdf8;"></i> Terms of Use</h2>
             </div>
 
-            <div class="modal-scroll-body" style="display:flex; flex-direction:column; gap:1rem; font-size:0.88rem; color:var(--text-muted); line-height:1.6; max-height:60vh; overflow-y:auto; padding-right:0.5rem;">
+            <div class="modal-scroll-body">
                 <p><strong style="color:#fff;">1. Personal Navigation Tool:</strong> Anime Navigator is a personal bookmark tool and web navigator. It does NOT host, store, stream, or distribute any anime video files or media content.</p>
-
                 <p><strong style="color:#fff;">2. User Responsibility:</strong> Users are responsible for the links they choose to save and launch. You agree not to intentionally save malicious or illegal URLs.</p>
-
                 <p><strong style="color:#fff;">3. Third-Party Content:</strong> Third-party streaming websites are independent entities. Anime Navigator has no control over external content, availability, or third-party site safety.</p>
-
                 <p><strong style="color:#fff;">4. Local Storage Disclaimer:</strong> Data is saved in browser `localStorage`. Clearing browser data or using private/incognito mode may result in local data loss.</p>
             </div>
         </div>

@@ -1,16 +1,17 @@
 /* ==========================================================================
-   ANIME NAVIGATOR - SECURITY HARDENED LOGIC & ENGINE (app.js)
+   ANIME NAVIGATOR - SECURITY & PERFORMANCE HARDENED ENGINE (app.js)
    ========================================================================== */
 
 // CONSTANTS & ALLOWED SCHEMES
 const STORAGE_KEY = "anime_navigator_list_v4";
 const WALLPAPER_KEY = "anime_navigator_wallpaper_idx";
+const PERF_MODE_KEY = "anime_navigator_perf_mode";
+
 const MAX_TITLE_LEN = 150;
 const MAX_URL_LEN = 2048;
 const MAX_WATCHLIST_LIMIT = 500;
 
 const ALLOWED_CATEGORIES = ["Watching", "Going to watch", "Ongoing-follow-up", "Completed"];
-
 const DEFAULT_POSTER = "https://images.unsplash.com/photo-1578632767115-351597cf2477?q=80&w=800&auto=format&fit=crop";
 
 const WALLPAPERS = [
@@ -68,8 +69,10 @@ class AnimeNavigator {
     this.currentNav = "Home";
     this.searchQuery = "";
     this.currentWallpaperIndex = this.loadWallpaperIndex();
+    this.isPerfMode = this.loadPerfModePreference();
 
     this.initElements();
+    this.applyPerfMode();
     this.initVideoBackground();
     this.initEventListeners();
     this.render();
@@ -118,6 +121,50 @@ class AnimeNavigator {
     }
   }
 
+  loadPerfModePreference() {
+    try {
+      const saved = localStorage.getItem(PERF_MODE_KEY);
+      if (saved !== null) return saved === "true";
+
+      // Auto-enable low power performance mode on small mobile screens or reduced motion preference
+      const isMobile = window.innerWidth <= 768;
+      const prefersReducedMotion = window.matchMedia && window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+      return isMobile || prefersReducedMotion;
+    } catch (e) {
+      return false;
+    }
+  }
+
+  applyPerfMode() {
+    document.body.classList.toggle("perf-mode", this.isPerfMode);
+
+    const perfBtn = document.getElementById("toggle-perf-btn");
+    const perfLabel = document.getElementById("perf-btn-label");
+
+    if (perfBtn) {
+      perfBtn.classList.toggle("active-mode", this.isPerfMode);
+    }
+    if (perfLabel) {
+      perfLabel.textContent = this.isPerfMode ? "Fast (ON)" : "Fast Mode";
+    }
+
+    if (this.bgVideo) {
+      if (this.isPerfMode) {
+        this.bgVideo.pause();
+      } else {
+        this.bgVideo.play().catch(() => {});
+      }
+    }
+  }
+
+  togglePerfMode() {
+    this.isPerfMode = !this.isPerfMode;
+    try {
+      localStorage.setItem(PERF_MODE_KEY, this.isPerfMode.toString());
+    } catch (e) {}
+    this.applyPerfMode();
+  }
+
   initElements() {
     this.animeGrid = document.getElementById("anime-grid");
     this.searchInput = document.getElementById("search-input");
@@ -138,7 +185,7 @@ class AnimeNavigator {
   }
 
   initVideoBackground() {
-    if (!this.bgVideo || !this.bgVideoSrc) return;
+    if (!this.bgVideo || !this.bgVideoSrc || this.isPerfMode) return;
 
     const targetSrc = WALLPAPERS[this.currentWallpaperIndex % WALLPAPERS.length];
     if (this.bgVideoSrc.getAttribute("src") !== targetSrc) {
@@ -146,18 +193,19 @@ class AnimeNavigator {
       this.bgVideo.load();
     }
 
-    this.bgVideo.play().catch(err => {
-      // Auto-play muted handling
-    });
+    this.bgVideo.play().catch(() => {});
   }
 
   toggleWallpaper() {
+    if (this.isPerfMode) {
+      this.togglePerfMode();
+      return;
+    }
+
     this.currentWallpaperIndex = (this.currentWallpaperIndex + 1) % WALLPAPERS.length;
     try {
       localStorage.setItem(WALLPAPER_KEY, this.currentWallpaperIndex.toString());
-    } catch (e) {
-      // Ignore storage write failure
-    }
+    } catch (e) {}
 
     if (this.bgVideo && this.bgVideoSrc) {
       this.bgVideo.style.opacity = "0.2";
@@ -192,6 +240,12 @@ class AnimeNavigator {
       this.currentNav = "Home";
       this.render();
     });
+
+    // Performance Mode Button
+    const perfBtn = document.getElementById("toggle-perf-btn");
+    if (perfBtn) {
+      perfBtn.addEventListener("click", () => this.togglePerfMode());
+    }
 
     // Wallpaper Button
     const wallpaperBtn = document.getElementById("toggle-wallpaper-btn");
@@ -258,6 +312,13 @@ class AnimeNavigator {
         if (e.target === modal) modal.classList.remove("active");
       });
     });
+
+    // Handle Window Resize for Auto Performance Adaptability
+    window.addEventListener("resize", () => {
+      if (window.innerWidth <= 768 && !this.isPerfMode) {
+        // Option to adaptively reduce GPU load
+      }
+    });
   }
 
   showError(container, msg) {
@@ -284,7 +345,7 @@ class AnimeNavigator {
     });
   }
 
-  // DEFENSIVE DOM CONSTRUCTION (XSS PREVENTION)
+  // DEFENSIVE DOM CONSTRUCTION (XSS PREVENTION & HIGH PERFORMANCE RENDERING)
   render() {
     const filtered = this.getFilteredList();
     this.updateHeaderBadges();
@@ -342,6 +403,7 @@ class AnimeNavigator {
       img.src = anime.poster;
       img.alt = anime.title;
       img.loading = "lazy";
+      img.setAttribute("decoding", "async");
       img.setAttribute("referrerpolicy", "no-referrer");
       img.onerror = () => { img.src = DEFAULT_POSTER; };
 
