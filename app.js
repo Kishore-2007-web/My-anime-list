@@ -4,7 +4,9 @@
 
 const WALLPAPERS = [
   "assets/samurai-katana-in-forest-cinematic-4k-live-wallpaper.mp4",
-  "assets/samurai-sun-live-wallpaper.mp4"
+  "assets/samurai-sun-live-wallpaper.mp4",
+  "assets/fallen-angel-in-the-ruins-live-wallpaper.mp4",
+  "assets/moonlit-sanctuary-tranquil-waterfall-torii-gate-4k-live-wallpaper.mp4"
 ];
 
 const INITIAL_NAVIGATOR_DATA = [
@@ -111,7 +113,7 @@ class AnimeNavigator {
 
   initVideoBackground() {
     if (!this.bgVideo || !this.bgVideoSrc) return;
-    
+
     // Set active wallpaper source
     const targetSrc = WALLPAPERS[this.currentWallpaperIndex % WALLPAPERS.length];
     if (this.bgVideoSrc.getAttribute("src") !== targetSrc) {
@@ -128,7 +130,7 @@ class AnimeNavigator {
   toggleWallpaper() {
     this.currentWallpaperIndex = (this.currentWallpaperIndex + 1) % WALLPAPERS.length;
     localStorage.setItem("anime_navigator_wallpaper_idx", this.currentWallpaperIndex);
-    
+
     if (this.bgVideo && this.bgVideoSrc) {
       this.bgVideo.style.opacity = "0.2";
       setTimeout(() => {
