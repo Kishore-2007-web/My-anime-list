@@ -56,32 +56,34 @@ body {
   outline-offset: 2px;
 }
 
-/* Fullscreen Background Video & Overlay - HIGH VISIBILITY SETUP */
-.bg-video {
+/* Fullscreen Background Image & Overlay - HIGH VISIBILITY SETUP */
+.bg-wallpaper {
   position: fixed;
   top: 0;
   left: 0;
   width: 100vw;
   height: 100vh;
-  object-fit: cover;
+  background-size: cover;
+  background-position: center;
+  background-repeat: no-repeat;
   z-index: -2;
-  filter: brightness(1.0) contrast(1.05);
+  filter: brightness(0.9) contrast(1.05);
   pointer-events: none;
   background-color: #050508;
-  transition: opacity 0.4s ease, filter 0.4s ease;
+  transition: background-image 0.5s ease-in-out, opacity 0.5s ease-in-out;
 }
 
 .video-overlay {
   position: fixed;
   inset: 0;
-  background: radial-gradient(circle at center, rgba(0, 0, 0, 0.1) 0%, rgba(0, 0, 0, 0.45) 100%);
+  background: radial-gradient(circle at center, rgba(0, 0, 0, 0.15) 0%, rgba(0, 0, 0, 0.5) 100%);
   z-index: -1;
   pointer-events: none;
 }
 
-/* HIGH-SPEED LOW-POWER PERFORMANCE MODE (DISABLES VIDEO & BLUR OVERHEAD) */
-body.perf-mode .bg-video {
-  display: none !important;
+/* HIGH-SPEED LOW-POWER PERFORMANCE MODE */
+body.perf-mode .bg-wallpaper {
+  filter: brightness(0.7) contrast(1.0);
 }
 
 body.perf-mode .video-overlay {
@@ -160,11 +162,12 @@ header.site-header:hover {
   display: flex;
   align-items: center;
   justify-content: center;
-  color: var(--accent-cyan);
+  color: #ffffff;
 }
 
 .brand-title span {
-  color: var(--accent-cyan);
+  color: #ffffff;
+  opacity: 0.85;
 }
 
 /* Nav Headers */
@@ -214,8 +217,8 @@ nav.header-nav {
 }
 
 .nav-link.active .nav-badge {
-  background: var(--accent-cyan);
-  color: #000;
+  background: #ffffff;
+  color: #000000;
 }
 
 /* Header Action Controls Group */
@@ -225,14 +228,14 @@ nav.header-nav {
   gap: 0.65rem;
 }
 
-/* Glass Buttons */
+/* Glass Buttons - Quick Add Button set to White */
 .btn-glass-primary {
   display: inline-flex;
   align-items: center;
   gap: 0.5rem;
-  background: rgba(56, 189, 248, 0.25);
-  color: #fff;
-  border: 1px solid var(--accent-cyan);
+  background: #ffffff;
+  color: #050508;
+  border: 1px solid #ffffff;
   padding: 0.65rem 1.25rem;
   border-radius: var(--radius-full);
   font-family: var(--font-primary);
@@ -242,12 +245,15 @@ nav.header-nav {
   backdrop-filter: blur(10px);
   transition: var(--transition-normal);
   min-height: 40px;
+  box-shadow: 0 4px 15px rgba(255, 255, 255, 0.25);
 }
 
 .btn-glass-primary:hover {
-  background: var(--accent-cyan);
-  color: #000;
+  background: #e2e8f0;
+  color: #000000;
+  border-color: #e2e8f0;
   transform: translateY(-2px);
+  box-shadow: 0 6px 20px rgba(255, 255, 255, 0.4);
 }
 
 .btn-glass-secondary {
@@ -275,8 +281,8 @@ nav.header-nav {
 }
 
 .btn-glass-secondary.active-mode {
-  background: rgba(56, 189, 248, 0.3);
-  border-color: var(--accent-cyan);
+  background: rgba(255, 255, 255, 0.25);
+  border-color: #ffffff;
   color: #fff;
 }
 
@@ -726,17 +732,18 @@ select option {
 
 @media (max-width: 850px) {
   .app-container {
-    padding: 1rem 1rem 3rem 1rem;
+    padding: 0.75rem 0.75rem 3rem 0.75rem;
   }
 
   header.site-header {
-    padding: 0.75rem 1rem;
-    margin-bottom: 1.25rem;
+    padding: 0.75rem 0.85rem;
+    margin-bottom: 1rem;
     flex-direction: column;
     align-items: stretch;
     gap: 0.75rem;
-    backdrop-filter: blur(6px);
-    -webkit-backdrop-filter: blur(6px);
+    backdrop-filter: blur(12px);
+    -webkit-backdrop-filter: blur(12px);
+    border-radius: var(--radius-md);
   }
 
   .brand-logo {
@@ -746,25 +753,35 @@ select option {
   nav.header-nav {
     overflow-x: auto;
     white-space: nowrap;
-    padding: 0.3rem;
+    padding: 0.35rem;
     -webkit-overflow-scrolling: touch;
     scrollbar-width: none;
+    justify-content: flex-start;
+    width: 100%;
   }
 
   nav.header-nav::-webkit-scrollbar {
     display: none;
   }
 
+  .nav-link {
+    padding: 0.5rem 0.85rem;
+    font-size: 0.82rem;
+    flex-shrink: 0;
+  }
+
   .header-actions {
     display: flex;
     justify-content: center;
-    flex-wrap: wrap;
+    width: 100%;
     gap: 0.5rem;
   }
 
   .btn-glass-primary, .btn-glass-secondary {
+    flex: 1;
+    justify-content: center;
     min-height: 42px;
-    padding: 0.5rem 0.85rem;
+    padding: 0.5rem 0.75rem;
     font-size: 0.82rem;
   }
 
@@ -773,9 +790,9 @@ select option {
     align-items: stretch;
     gap: 0.75rem;
     padding: 0.85rem 1rem;
-    margin-bottom: 1.25rem;
-    backdrop-filter: blur(6px);
-    -webkit-backdrop-filter: blur(6px);
+    margin-bottom: 1rem;
+    backdrop-filter: blur(8px);
+    -webkit-backdrop-filter: blur(8px);
   }
 
   .search-box {
@@ -783,33 +800,41 @@ select option {
   }
 
   .anime-grid {
-    grid-template-columns: repeat(auto-fill, minmax(160px, 1fr));
-    gap: 1.1rem;
+    grid-template-columns: repeat(auto-fill, minmax(140px, 1fr));
+    gap: 1rem;
   }
 
   .anime-card {
-    backdrop-filter: blur(6px);
-    -webkit-backdrop-filter: blur(6px);
+    backdrop-filter: blur(8px);
+    -webkit-backdrop-filter: blur(8px);
   }
 }
 
 @media (max-width: 500px) {
+  .app-container {
+    padding: 0.5rem 0.5rem 2.5rem 0.5rem;
+  }
+
   .anime-grid {
-    grid-template-columns: repeat(auto-fill, minmax(135px, 1fr));
-    gap: 0.85rem;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 0.75rem;
   }
 
   .card-body {
-    padding: 0.75rem;
+    padding: 0.65rem 0.75rem;
   }
 
   .anime-title {
-    font-size: 0.85rem;
+    font-size: 0.82rem;
+  }
+
+  .modal-backdrop {
+    padding: 0.75rem;
   }
 
   .modal-content {
-    padding: 1.25rem;
-    max-height: 92vh;
+    padding: 1.25rem 1rem;
+    max-height: 90vh;
     border-radius: var(--radius-md);
   }
 }

@@ -15,10 +15,40 @@ const ALLOWED_CATEGORIES = ["Watching", "Going to watch", "Ongoing-follow-up", "
 const DEFAULT_POSTER = "https://images.unsplash.com/photo-1578632767115-351597cf2477?q=80&w=800&auto=format&fit=crop";
 
 const WALLPAPERS = [
-  "assets/samurai-katana-in-forest-cinematic-4k-live-wallpaper.mp4",
-  "assets/samurai-sun-live-wallpaper.mp4",
-  "assets/fallen-angel-in-the-ruins-live-wallpaper.mp4",
-  "assets/moonlit-sanctuary-tranquil-waterfall-torii-gate-4k-live-wallpaper.mp4"
+  "assets/Screenshot 2026-08-28 210335.png",
+  "assets/Screenshot 2026-08-28 210417.png",
+  "assets/Screenshot 2026-08-28 210444.png"
+];
+
+const DEFAULT_ANIME_LIST = [
+  {
+    id: "nav-demo-1",
+    title: "Solo Leveling",
+    poster: "https://images.unsplash.com/photo-1578632767115-351597cf2477?q=80&w=800&auto=format&fit=crop",
+    status: "Watching",
+    link: "https://hianime.to/watch/solo-leveling-18718"
+  },
+  {
+    id: "nav-demo-2",
+    title: "Jujutsu Kaisen",
+    poster: "https://images.unsplash.com/photo-1607604276583-eef5d076aa5f?q=80&w=800&auto=format&fit=crop",
+    status: "Watching",
+    link: "https://hianime.to/watch/jujutsu-kaisen-534"
+  },
+  {
+    id: "nav-demo-3",
+    title: "Demon Slayer",
+    poster: "https://images.unsplash.com/photo-1534447677768-be436bb09401?q=80&w=800&auto=format&fit=crop",
+    status: "Going to watch",
+    link: "https://hianime.to/watch/demon-slayer-kimetsu-no-yaiba-47"
+  },
+  {
+    id: "nav-demo-4",
+    title: "Attack on Titan",
+    poster: "https://images.unsplash.com/photo-1563089145-599997674d42?q=80&w=800&auto=format&fit=crop",
+    status: "Completed",
+    link: "https://hianime.to/watch/attack-on-titan-112"
+  }
 ];
 
 // CENTRALIZED SECURE HTTPS URL PARSER
@@ -73,7 +103,7 @@ class AnimeNavigator {
 
     this.initElements();
     this.applyPerfMode();
-    this.initVideoBackground();
+    this.initWallpaperBackground();
     this.initEventListeners();
     this.render();
   }
@@ -81,10 +111,15 @@ class AnimeNavigator {
   loadState() {
     try {
       const raw = localStorage.getItem(STORAGE_KEY);
-      if (!raw) return [];
+      if (!raw) {
+        localStorage.setItem(STORAGE_KEY, JSON.stringify(DEFAULT_ANIME_LIST));
+        return DEFAULT_ANIME_LIST;
+      }
       
       const parsed = JSON.parse(raw);
-      if (!Array.isArray(parsed)) return [];
+      if (!Array.isArray(parsed) || parsed.length === 0) {
+        return [];
+      }
 
       const sanitized = [];
       for (const item of parsed) {
@@ -94,7 +129,7 @@ class AnimeNavigator {
       return sanitized;
     } catch (e) {
       console.error("Failed to load or parse localStorage data:", e);
-      return [];
+      return DEFAULT_ANIME_LIST;
     }
   }
 
@@ -126,10 +161,8 @@ class AnimeNavigator {
       const saved = localStorage.getItem(PERF_MODE_KEY);
       if (saved !== null) return saved === "true";
 
-      // Auto-enable low power performance mode on small mobile screens or reduced motion preference
-      const isMobile = window.innerWidth <= 768;
       const prefersReducedMotion = window.matchMedia && window.matchMedia("(prefers-reduced-motion: reduce)").matches;
-      return isMobile || prefersReducedMotion;
+      return prefersReducedMotion;
     } catch (e) {
       return false;
     }
@@ -147,14 +180,6 @@ class AnimeNavigator {
     if (perfLabel) {
       perfLabel.textContent = this.isPerfMode ? "Fast (ON)" : "Fast Mode";
     }
-
-    if (this.bgVideo) {
-      if (this.isPerfMode) {
-        this.bgVideo.pause();
-      } else {
-        this.bgVideo.play().catch(() => {});
-      }
-    }
   }
 
   togglePerfMode() {
@@ -170,8 +195,7 @@ class AnimeNavigator {
     this.searchInput = document.getElementById("search-input");
     this.headerNav = document.getElementById("header-nav");
     this.activeListCount = document.getElementById("active-list-count");
-    this.bgVideo = document.getElementById("bg-video");
-    this.bgVideoSrc = document.getElementById("bg-video-src");
+    this.bgWallpaper = document.getElementById("bg-wallpaper");
 
     // Modals
     this.addModal = document.getElementById("add-modal");
@@ -184,37 +208,25 @@ class AnimeNavigator {
     this.editErrorMsg = document.getElementById("edit-error-msg");
   }
 
-  initVideoBackground() {
-    if (!this.bgVideo || !this.bgVideoSrc || this.isPerfMode) return;
-
+  initWallpaperBackground() {
+    if (!this.bgWallpaper) return;
     const targetSrc = WALLPAPERS[this.currentWallpaperIndex % WALLPAPERS.length];
-    if (this.bgVideoSrc.getAttribute("src") !== targetSrc) {
-      this.bgVideoSrc.setAttribute("src", targetSrc);
-      this.bgVideo.load();
-    }
-
-    this.bgVideo.play().catch(() => {});
+    this.bgWallpaper.style.backgroundImage = `url("${targetSrc}")`;
   }
 
   toggleWallpaper() {
-    if (this.isPerfMode) {
-      this.togglePerfMode();
-      return;
-    }
-
     this.currentWallpaperIndex = (this.currentWallpaperIndex + 1) % WALLPAPERS.length;
     try {
       localStorage.setItem(WALLPAPER_KEY, this.currentWallpaperIndex.toString());
     } catch (e) {}
 
-    if (this.bgVideo && this.bgVideoSrc) {
-      this.bgVideo.style.opacity = "0.2";
+    if (this.bgWallpaper) {
+      this.bgWallpaper.style.opacity = "0.3";
       setTimeout(() => {
-        this.bgVideoSrc.setAttribute("src", WALLPAPERS[this.currentWallpaperIndex]);
-        this.bgVideo.load();
-        this.bgVideo.play().catch(() => {});
-        this.bgVideo.style.opacity = "1";
-      }, 250);
+        const nextWallpaper = WALLPAPERS[this.currentWallpaperIndex % WALLPAPERS.length];
+        this.bgWallpaper.style.backgroundImage = `url("${nextWallpaper}")`;
+        this.bgWallpaper.style.opacity = "1";
+      }, 200);
     }
   }
 
