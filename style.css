@@ -10,10 +10,10 @@
   --bg-glass-card-hover: rgba(18, 18, 28, 0.4);
   --bg-glass-input: rgba(0, 0, 0, 0.4);
   --border-glass: rgba(255, 255, 255, 0.18);
-  --border-glass-glow: rgba(56, 189, 248, 0.6);
+  --border-glass-glow: rgba(255, 255, 255, 0.6);
 
   /* Minimal Color Highlights */
-  --accent-cyan: #38bdf8;
+  --accent-cyan: #ffffff;
   --accent-purple: #a855f7;
   --accent-pink: #f43f5e;
   --accent-red: #ef4444;
@@ -338,8 +338,8 @@ select option {
 }
 
 .search-input:focus {
-  border-color: var(--accent-cyan);
-  box-shadow: 0 0 15px rgba(56, 189, 248, 0.4);
+  border-color: #ffffff;
+  box-shadow: 0 0 15px rgba(255, 255, 255, 0.4);
 }
 
 .active-count-tag {
@@ -378,7 +378,7 @@ select option {
   transform: translateY(-6px);
   background: var(--bg-glass-card-hover);
   border-color: rgba(255, 255, 255, 0.35);
-  box-shadow: 0 20px 40px rgba(0, 0, 0, 0.7), 0 0 25px rgba(56, 189, 248, 0.2);
+  box-shadow: 0 20px 40px rgba(0, 0, 0, 0.7), 0 0 25px rgba(255, 255, 255, 0.2);
 }
 
 .card-poster-wrap {
@@ -420,7 +420,7 @@ select option {
   backdrop-filter: blur(10px);
 }
 
-.status-badge[data-status="Watching"] { color: #38bdf8; border-color: #38bdf8; }
+.status-badge[data-status="Watching"] { color: #ffffff; border-color: #ffffff; }
 .status-badge[data-status="Going to watch"] { color: #f43f5e; border-color: #f43f5e; }
 .status-badge[data-status="Ongoing-follow-up"] { color: #f59e0b; border-color: #f59e0b; }
 .status-badge[data-status="Completed"] { color: #a855f7; border-color: #a855f7; }
@@ -476,7 +476,7 @@ select option {
 }
 
 .launch-icon {
-  color: var(--accent-cyan);
+  color: #ffffff;
   font-size: 0.85rem;
   opacity: 0.8;
   transition: transform 0.2s ease, opacity 0.2s ease;
@@ -531,7 +531,7 @@ select option {
   max-width: 500px;
   padding: 2rem;
   position: relative;
-  box-shadow: 0 25px 60px rgba(0, 0, 0, 0.9), 0 0 30px rgba(56, 189, 248, 0.2);
+  box-shadow: 0 25px 60px rgba(0, 0, 0, 0.9), 0 0 30px rgba(255, 255, 255, 0.2);
   transform: translateY(20px) scale(0.96);
   transition: transform 0.3s ease;
 }
@@ -636,14 +636,14 @@ select option {
 }
 
 .form-input:focus, .form-select:focus {
-  border-color: var(--accent-cyan);
-  box-shadow: 0 0 15px rgba(56, 189, 248, 0.4);
+  border-color: #ffffff;
+  box-shadow: 0 0 15px rgba(255, 255, 255, 0.4);
 }
 
 .btn-glass-submit {
-  background: rgba(56, 189, 248, 0.25);
-  border: 1px solid var(--accent-cyan);
-  color: #fff;
+  background: #ffffff;
+  border: 1px solid #ffffff;
+  color: #050508;
   padding: 0.8rem 1.5rem;
   border-radius: var(--radius-md);
   font-family: var(--font-primary);
@@ -653,11 +653,12 @@ select option {
   transition: var(--transition-normal);
   margin-top: 0.5rem;
   min-height: 46px;
+  box-shadow: 0 4px 15px rgba(255, 255, 255, 0.2);
 }
 
 .btn-glass-submit:hover {
-  background: var(--accent-cyan);
-  color: #000;
+  background: #e2e8f0;
+  color: #000000;
 }
 
 .btn-glass-danger {
