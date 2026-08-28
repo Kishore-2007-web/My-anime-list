@@ -5,7 +5,6 @@
 // CONSTANTS & ALLOWED SCHEMES
 const STORAGE_KEY = "anime_navigator_list_v4";
 const WALLPAPER_KEY = "anime_navigator_wallpaper_idx";
-const PERF_MODE_KEY = "anime_navigator_perf_mode";
 
 const MAX_TITLE_LEN = 150;
 const MAX_URL_LEN = 2048;
@@ -99,10 +98,8 @@ class AnimeNavigator {
     this.currentNav = "Home";
     this.searchQuery = "";
     this.currentWallpaperIndex = this.loadWallpaperIndex();
-    this.isPerfMode = this.loadPerfModePreference();
 
     this.initElements();
-    this.applyPerfMode();
     this.initWallpaperBackground();
     this.initEventListeners();
     this.render();
@@ -154,40 +151,6 @@ class AnimeNavigator {
     } catch (e) {
       return 0;
     }
-  }
-
-  loadPerfModePreference() {
-    try {
-      const saved = localStorage.getItem(PERF_MODE_KEY);
-      if (saved !== null) return saved === "true";
-
-      const prefersReducedMotion = window.matchMedia && window.matchMedia("(prefers-reduced-motion: reduce)").matches;
-      return prefersReducedMotion;
-    } catch (e) {
-      return false;
-    }
-  }
-
-  applyPerfMode() {
-    document.body.classList.toggle("perf-mode", this.isPerfMode);
-
-    const perfBtn = document.getElementById("toggle-perf-btn");
-    const perfLabel = document.getElementById("perf-btn-label");
-
-    if (perfBtn) {
-      perfBtn.classList.toggle("active-mode", this.isPerfMode);
-    }
-    if (perfLabel) {
-      perfLabel.textContent = this.isPerfMode ? "Fast (ON)" : "Fast Mode";
-    }
-  }
-
-  togglePerfMode() {
-    this.isPerfMode = !this.isPerfMode;
-    try {
-      localStorage.setItem(PERF_MODE_KEY, this.isPerfMode.toString());
-    } catch (e) {}
-    this.applyPerfMode();
   }
 
   initElements() {
@@ -252,12 +215,6 @@ class AnimeNavigator {
       this.currentNav = "Home";
       this.render();
     });
-
-    // Performance Mode Button
-    const perfBtn = document.getElementById("toggle-perf-btn");
-    if (perfBtn) {
-      perfBtn.addEventListener("click", () => this.togglePerfMode());
-    }
 
     // Wallpaper Button
     const wallpaperBtn = document.getElementById("toggle-wallpaper-btn");
