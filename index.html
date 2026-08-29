@@ -7,7 +7,8 @@
     <title>Anime Navigator - Pure Glass Watchlist</title>
 
     <!-- Security & Privacy Meta Headers -->
-    <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self'; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com https://cdnjs.cloudflare.com; font-src 'self' https://fonts.gstatic.com https://cdnjs.cloudflare.com; img-src 'self' https: data:; media-src 'self'; object-src 'none'; base-uri 'self';">
+    <meta http-equiv="Content-Security-Policy"
+        content="default-src 'self'; script-src 'self'; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com https://cdnjs.cloudflare.com; font-src 'self' https://fonts.gstatic.com https://cdnjs.cloudflare.com; img-src 'self' https: data:; media-src 'self'; object-src 'none'; base-uri 'self';">
     <meta name="referrer" content="strict-origin-when-cross-origin">
     <meta http-equiv="X-Content-Type-Options" content="nosniff">
 
@@ -23,7 +24,7 @@
 
 <body>
 
-    <!-- Background Image & Dark Overlay Layer -->
+    <!-- Background Image & Dark Overlay Layer for bg-->
     <div id="bg-wallpaper" class="bg-wallpaper"></div>
     <div class="video-overlay"></div>
 
@@ -73,7 +74,8 @@
         <section class="controls-section">
             <div class="search-box">
                 <i class="fa-solid fa-magnifying-glass search-icon"></i>
-                <input type="text" id="search-input" class="search-input" placeholder="Search saved anime titles..." maxlength="150">
+                <input type="text" id="search-input" class="search-input" placeholder="Search saved anime titles..."
+                    maxlength="150">
             </div>
             <div class="active-count-tag" id="active-list-count">0 Saved Anime</div>
         </section>
@@ -113,12 +115,14 @@
             <form id="add-anime-form" class="form-stack">
                 <div class="form-group">
                     <label class="form-label" for="add-title">1. Anime Title *</label>
-                    <input type="text" id="add-title" class="form-input" placeholder="e.g. Solo Leveling" maxlength="150" required>
+                    <input type="text" id="add-title" class="form-input" placeholder="e.g. Solo Leveling"
+                        maxlength="150" required>
                 </div>
 
                 <div class="form-group">
                     <label class="form-label" for="add-poster">2. Poster Image URL (HTTPS)</label>
-                    <input type="url" id="add-poster" class="form-input" placeholder="https://image-url.com/poster.jpg" maxlength="2048">
+                    <input type="url" id="add-poster" class="form-input" placeholder="https://image-url.com/poster.jpg"
+                        maxlength="2048">
                 </div>
 
                 <div class="form-group">
@@ -205,11 +209,19 @@
             </div>
 
             <div class="modal-scroll-body">
-                <p><strong style="color:#fff;">1. Local Storage Only:</strong> All anime titles, poster image URLs, category statuses, and watch links are stored locally in your browser (`localStorage`). No server database, user accounts, or cloud storage exist.</p>
-                <p><strong style="color:#fff;">2. Zero Data Collection & Tracking:</strong> Anime Navigator does NOT use analytics, cookies, tracking pixels, advertisement networks, or user fingerprinting scripts.</p>
-                <p><strong style="color:#fff;">3. External Web Links:</strong> Saved watch links redirect to third-party external websites in a new tab with strict `noopener,noreferrer` tab isolation. External websites operate independently under their own privacy policies.</p>
-                <p><strong style="color:#fff;">4. Data Control & Deletion:</strong> You have full control over your data. You can delete individual entries using the edit menu or clear all saved data anytime by clearing your browser's site data.</p>
-                <p><strong style="color:#fff;">5. Security Reporting:</strong> Vulnerabilities or security concerns can be responsibly disclosed through our official GitHub repository issue tracker.</p>
+                <p><strong style="color:#fff;">1. Local Storage Only:</strong> All anime titles, poster image URLs,
+                    category statuses, and watch links are stored locally in your browser (`localStorage`). No server
+                    database, user accounts, or cloud storage exist.</p>
+                <p><strong style="color:#fff;">2. Zero Data Collection & Tracking:</strong> Anime Navigator does NOT use
+                    analytics, cookies, tracking pixels, advertisement networks, or user fingerprinting scripts.</p>
+                <p><strong style="color:#fff;">3. External Web Links:</strong> Saved watch links redirect to third-party
+                    external websites in a new tab with strict `noopener,noreferrer` tab isolation. External websites
+                    operate independently under their own privacy policies.</p>
+                <p><strong style="color:#fff;">4. Data Control & Deletion:</strong> You have full control over your
+                    data. You can delete individual entries using the edit menu or clear all saved data anytime by
+                    clearing your browser's site data.</p>
+                <p><strong style="color:#fff;">5. Security Reporting:</strong> Vulnerabilities or security concerns can
+                    be responsibly disclosed through our official GitHub repository issue tracker.</p>
             </div>
         </div>
     </div>
@@ -224,10 +236,17 @@
             </div>
 
             <div class="modal-scroll-body">
-                <p><strong style="color:#fff;">1. Personal Navigation Tool:</strong> Anime Navigator is a personal bookmark tool and web navigator. It does NOT host, store, stream, or distribute any anime video files or media content.</p>
-                <p><strong style="color:#fff;">2. User Responsibility:</strong> Users are responsible for the links they choose to save and launch. You agree not to intentionally save malicious or illegal URLs.</p>
-                <p><strong style="color:#fff;">3. Third-Party Content:</strong> Third-party streaming websites are independent entities. Anime Navigator has no control over external content, availability, or third-party site safety.</p>
-                <p><strong style="color:#fff;">4. Local Storage Disclaimer:</strong> Data is saved in browser `localStorage`. Clearing browser data or using private/incognito mode may result in local data loss.</p>
+                <p><strong style="color:#fff;">1. Personal Navigation Tool:</strong> Anime Navigator is a personal
+                    bookmark tool and web navigator. It does NOT host, store, stream, or distribute any anime video
+                    files or media content.</p>
+                <p><strong style="color:#fff;">2. User Responsibility:</strong> Users are responsible for the links they
+                    choose to save and launch. You agree not to intentionally save malicious or illegal URLs.</p>
+                <p><strong style="color:#fff;">3. Third-Party Content:</strong> Third-party streaming websites are
+                    independent entities. Anime Navigator has no control over external content, availability, or
+                    third-party site safety.</p>
+                <p><strong style="color:#fff;">4. Local Storage Disclaimer:</strong> Data is saved in browser
+                    `localStorage`. Clearing browser data or using private/incognito mode may result in local data loss.
+                </p>
             </div>
         </div>
     </div>
