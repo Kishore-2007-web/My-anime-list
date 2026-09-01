@@ -1,6 +1,6 @@
 # 🧭 Anime Navigator — Personal Watchlist & Web Launcher
 
-A high-performance, pure glassmorphism anime watchlist and web navigator featuring fullscreen live MP4 video wallpapers, instant direct streaming links, and persistent browser storage.
+A high-performance, pure glassmorphism anime watchlist and web navigator featuring fullscreen live MP4 video wallpapers, instant direct streaming links, and persistent browser storage..
 
 ---
 
@@ -23,7 +23,7 @@ A high-performance, pure glassmorphism anime watchlist and web navigator featuri
   4. Website Watch Link
 - **✏️ Edit & Delete Manager**: Hover over any card and click the pen icon to edit details or delete bookmarks.
 - **🔍 Real-Time Search**: Search through your saved anime titles instantly.
-- **💾 LocalStorage Data Persistence**: All added anime bookmarks and selected wallpaper preferences are saved automatically in your browser (`localStorage`), keeping them intact even after exiting the site.
+- **💾 LocalStorage Data Persistence**: All added anime bookmarks and selected wallpaper preferences are saved automatically in your browser (`localStorage`), keeping them intact even after exiting the site..
 
 ---
 
