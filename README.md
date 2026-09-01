@@ -120,4 +120,4 @@ my-anime-list/
 
 ## 📄 License
 
-Open source personal project crafted with HTML5, Vanilla CSS, and JavaScript.
+Open source personal project crafted with HTML5, Vanilla CSS, and JavaScript..
