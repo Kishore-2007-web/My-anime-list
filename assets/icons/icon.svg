@@ -1,0 +1,130 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" width="100%" height="100%">
+  <defs>
+    <!-- Background Gradient -->
+    <radialGradient id="bgGrad" cx="50%" cy="40%" r="65%">
+      <stop offset="0%" stop-color="#1a1c35" />
+      <stop offset="50%" stop-color="#0e1022" />
+      <stop offset="100%" stop-color="#04050a" />
+    </radialGradient>
+
+    <!-- Glowing Border Gradient -->
+    <linearGradient id="borderGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#38bdf8" stop-opacity="0.9" />
+      <stop offset="50%" stop-color="#a855f7" stop-opacity="0.8" />
+      <stop offset="100%" stop-color="#f43f5e" stop-opacity="0.6" />
+    </linearGradient>
+
+    <!-- Star Primary Facet Gradients -->
+    <linearGradient id="facetLight" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#ffffff" />
+      <stop offset="60%" stop-color="#c084fc" />
+      <stop offset="100%" stop-color="#a855f7" />
+    </linearGradient>
+
+    <linearGradient id="facetDark" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#9333ea" />
+      <stop offset="60%" stop-color="#6b21a8" />
+      <stop offset="100%" stop-color="#3b0764" />
+    </linearGradient>
+
+    <linearGradient id="facetCyanLight" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#e0f2fe" />
+      <stop offset="100%" stop-color="#38bdf8" />
+    </linearGradient>
+
+    <linearGradient id="facetCyanDark" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#0284c7" />
+      <stop offset="100%" stop-color="#0369a1" />
+    </linearGradient>
+
+    <!-- Center Gem Glow -->
+    <radialGradient id="coreGlow" cx="50%" cy="50%" r="50%">
+      <stop offset="0%" stop-color="#ffffff" />
+      <stop offset="40%" stop-color="#38bdf8" />
+      <stop offset="80%" stop-color="#a855f7" stop-opacity="0.8" />
+      <stop offset="100%" stop-color="#a855f7" stop-opacity="0" />
+    </radialGradient>
+
+    <!-- Glow Filter -->
+    <filter id="neonGlow" x="-30%" y="-30%" width="160%" height="160%">
+      <feGaussianBlur stdDeviation="8" result="blur" />
+      <feMerge>
+        <feMergeNode in="blur" />
+        <feMergeNode in="SourceGraphic" />
+      </feMerge>
+    </filter>
+
+    <filter id="softGlow" x="-20%" y="-20%" width="140%" height="140%">
+      <feGaussianBlur stdDeviation="16" />
+    </filter>
+  </defs>
+
+  <!-- Background Base -->
+  <rect width="512" height="512" rx="112" fill="url(#bgGrad)" />
+       <rect width="504" height="504" x="4" y="4" rx="108" fill="none" stroke="url(#borderGrad)" stroke-width="2.5" opacity="0.6" />
+
+  <!-- Ambient Glow Behind Dial -->
+  <circle cx="256" cy="256" r="180" fill="#a855f7" opacity="0.25" filter="url(#softGlow)" />
+  <circle cx="256" cy="256" r="120" fill="#38bdf8" opacity="0.2" filter="url(#softGlow)" />
+
+  <g transform="translate(256, 256) scale(1) translate(-256, -256)">
+    <!-- Outer Glass Compass Dial Rings -->
+    <circle cx="256" cy="256" r="195" fill="none" stroke="rgba(255,255,255,0.08)" stroke-width="1.5" />
+    <circle cx="256" cy="256" r="185" fill="none" stroke="url(#borderGrad)" stroke-width="2" opacity="0.4" />
+    <circle cx="256" cy="256" r="150" fill="none" stroke="rgba(255,255,255,0.12)" stroke-dasharray="3 8" stroke-width="2" />
+    <circle cx="256" cy="256" r="115" fill="rgba(255,255,256,0.02)" stroke="rgba(168,85,247,0.3)" stroke-width="1.5" />
+
+    <!-- Compass Dial Cardinal Ticks -->
+    <line x1="256" y1="62" x2="256" y2="76" stroke="#ffffff" stroke-width="3" stroke-linecap="round" />
+    <line x1="256" y1="436" x2="256" y2="450" stroke="#a855f7" stroke-width="3" stroke-linecap="round" />
+    <line x1="62" y1="256" x2="76" y2="256" stroke="#38bdf8" stroke-width="3" stroke-linecap="round" />
+    <line x1="436" y1="256" x2="450" y2="256" stroke="#38bdf8" stroke-width="3" stroke-linecap="round" />
+
+    <!-- Diagonal Small Dots -->
+    <circle cx="120" cy="120" r="3.5" fill="#a855f7" opacity="0.7" />
+    <circle cx="392" cy="120" r="3.5" fill="#a855f7" opacity="0.7" />
+    <circle cx="120" cy="392" r="3.5" fill="#a855f7" opacity="0.7" />
+    <circle cx="392" cy="392" r="3.5" fill="#a855f7" opacity="0.7" />
+
+    <!-- 8-Point Compass Star -->
+    <g filter="url(#neonGlow)">
+      <!-- Diagonal Secondary Points (Cyan/Blue Theme) -->
+      <!-- NE -->
+      <polygon points="256,256 256,155 327,185" fill="url(#facetCyanLight)" />
+      <polygon points="256,256 357,256 327,185" fill="url(#facetCyanDark)" />
+      <!-- NW -->
+      <polygon points="256,256 256,155 185,185" fill="url(#facetCyanDark)" />
+      <polygon points="256,256 155,256 185,185" fill="url(#facetCyanLight)" />
+      <!-- SE -->
+      <polygon points="256,256 357,256 327,327" fill="url(#facetCyanLight)" />
+      <polygon points="256,256 256,357 327,327" fill="url(#facetCyanDark)" />
+      <!-- SW -->
+      <polygon points="256,256 155,256 185,327" fill="url(#facetCyanDark)" />
+      <polygon points="256,256 256,357 185,327" fill="url(#facetCyanLight)" />
+
+      <!-- Cardinal Primary Points (Violet/White Theme) -->
+      <!-- North (Longest / Leading Needle) -->
+      <polygon points="256,256 256,80 230,225" fill="url(#facetLight)" />
+      <polygon points="256,256 256,80 282,225" fill="url(#facetDark)" />
+
+      <!-- South -->
+      <polygon points="256,256 256,432 282,287" fill="url(#facetLight)" />
+      <polygon points="256,256 256,432 230,287" fill="url(#facetDark)" />
+
+      <!-- East -->
+      <polygon points="256,256 432,256 287,230" fill="url(#facetLight)" />
+      <polygon points="256,256 432,256 287,282" fill="url(#facetDark)" />
+
+      <!-- West -->
+      <polygon points="256,256 80,256 225,282" fill="url(#facetLight)" />
+      <polygon points="256,256 80,256 225,230" fill="url(#facetDark)" />
+    </g>
+
+    <!-- Center Radiant Crystal Gem -->
+    <circle cx="256" cy="256" r="32" fill="url(#coreGlow)" />
+    <circle cx="256" cy="256" r="16" fill="#ffffff" />
+    <polygon points="256,236 270,256 256,276 242,256" fill="#38bdf8" opacity="0.9" />
+    <polygon points="256,242 265,256 256,270 247,256" fill="#ffffff" />
+  </g>
+</svg>
