@@ -114,7 +114,7 @@ my-anime-list/
    ```bash
    npx serve .
    ```
-3. Open `http://localhost:8080` in your browser.
+3. Open `http://localhost:8080` in your browser:.
 
 ---
 
