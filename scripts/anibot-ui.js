@@ -138,7 +138,7 @@
         <!-- Ollama Settings Overlay Modal -->
         <div class="anibot-ollama-modal" id="anibot-ollama-modal">
           <div class="anibot-ollama-header">
-            <h3><i class="fa-solid fa-brain" style="color:#38bdf8;"></i> Local AI (Ollama) Settings</h3>
+            <h3><i class="fa-solid fa-brain" style="color:#ffffff;"></i> Local AI (Ollama) Settings</h3>
             <button type="button" class="anibot-ctrl-btn" id="anibot-ollama-close">&times;</button>
           </div>
           <p style="font-size: 0.8rem; color: #94a3b8; margin-bottom: 1rem; line-height: 1.5;">
@@ -146,7 +146,7 @@
           </p>
           <div class="form-group" style="margin-bottom: 0.85rem;">
             <label class="form-label" style="display:flex; align-items:center; gap:0.5rem; cursor:pointer;">
-              <input type="checkbox" id="ollama-enable-checkbox" style="width:18px; height:18px; accent-color:#38bdf8;">
+              <input type="checkbox" id="ollama-enable-checkbox" style="width:18px; height:18px; accent-color:#ffffff;">
               <span style="color:#fff; font-weight:700;">Enable Local Ollama Mode</span>
             </label>
           </div>

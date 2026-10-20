@@ -33,7 +33,7 @@
   color: #ffffff;
   font-size: 0.82rem;
   font-weight: 600;
-  box-shadow: 0 10px 25px rgba(0, 0, 0, 0.5), 0 0 15px rgba(56, 189, 248, 0.2);
+  box-shadow: 0 10px 25px rgba(0, 0, 0, 0.5);
   display: flex;
   align-items: center;
   gap: 0.5rem;
@@ -45,7 +45,7 @@
 
 .anibot-teaser-bubble:hover {
   transform: translateY(-2px);
-  border-color: rgba(56, 189, 248, 0.5);
+  border-color: rgba(255, 255, 255, 0.45);
 }
 
 .anibot-teaser-close {
@@ -59,7 +59,7 @@
 }
 
 .anibot-teaser-close:hover {
-  color: #f43f5e;
+  color: #ffffff;
 }
 
 /* Floating Avatar Button */
@@ -71,7 +71,7 @@
   backdrop-filter: blur(20px);
   -webkit-backdrop-filter: blur(20px);
   border: 2px solid rgba(255, 255, 255, 0.25);
-  box-shadow: 0 12px 30px rgba(0, 0, 0, 0.7), 0 0 20px rgba(56, 189, 248, 0.35);
+  box-shadow: 0 12px 30px rgba(0, 0, 0, 0.7);
   display: flex;
   align-items: center;
   justify-content: center;
@@ -85,11 +85,11 @@
 .anibot-launcher-btn:hover {
   transform: scale(1.08) translateY(-3px);
   border-color: rgba(255, 255, 255, 0.6);
-  box-shadow: 0 16px 35px rgba(0, 0, 0, 0.8), 0 0 25px rgba(168, 85, 247, 0.5);
+  box-shadow: 0 16px 35px rgba(0, 0, 0, 0.8);
 }
 
 .anibot-launcher-btn:focus-visible {
-  outline: 3px solid #38bdf8;
+  outline: 2px solid rgba(255, 255, 255, 0.6);
   outline-offset: 3px;
 }
 
@@ -266,7 +266,7 @@
   -webkit-backdrop-filter: blur(28px);
   border: 1px solid rgba(255, 255, 255, 0.2);
   border-radius: var(--radius-lg, 20px);
-  box-shadow: 0 25px 60px rgba(0, 0, 0, 0.9), 0 0 35px rgba(56, 189, 248, 0.2);
+  box-shadow: 0 25px 60px rgba(0, 0, 0, 0.9);
   z-index: 950;
   display: flex;
   flex-direction: column;
@@ -337,12 +337,13 @@
 
 .anibot-header-badge {
   font-size: 0.68rem;
-  padding: 0.12rem 0.45rem;
-  background: linear-gradient(135deg, rgba(56, 189, 248, 0.25), rgba(168, 85, 247, 0.25));
-  border: 1px solid rgba(255, 255, 255, 0.2);
+  padding: 0.15rem 0.5rem;
+  background: rgba(255, 255, 255, 0.1);
+  border: 1px solid rgba(255, 255, 255, 0.18);
   border-radius: var(--radius-full, 9999px);
-  color: #7dd3fc;
-  font-weight: 700;
+  color: #ffffff;
+  font-weight: 600;
+  letter-spacing: 0.02em;
 }
 
 .anibot-header-sub {
@@ -472,8 +473,8 @@
 }
 
 .anibot-msg-row.user .anibot-msg-bubble {
-  background: linear-gradient(135deg, rgba(56, 189, 248, 0.35), rgba(168, 85, 247, 0.35));
-  border: 1px solid rgba(255, 255, 255, 0.3);
+  background: rgba(255, 255, 255, 0.15);
+  border: 1px solid rgba(255, 255, 255, 0.25);
   color: #ffffff;
   border-top-right-radius: 4px;
 }
@@ -484,7 +485,8 @@
 }
 
 .anibot-msg-bubble em {
-  color: #38bdf8;
+  color: #ffffff;
+  font-weight: 600;
   font-style: normal;
 }
 
@@ -504,9 +506,9 @@
 }
 
 .anibot-action-btn {
-  background: rgba(56, 189, 248, 0.15);
-  border: 1px solid rgba(56, 189, 248, 0.35);
-  color: #7dd3fc;
+  background: rgba(255, 255, 255, 0.08);
+  border: 1px solid rgba(255, 255, 255, 0.18);
+  color: #ffffff;
   padding: 0.35rem 0.75rem;
   border-radius: var(--radius-full, 9999px);
   font-size: 0.78rem;
@@ -519,10 +521,11 @@
 }
 
 .anibot-action-btn:hover {
-  background: rgba(56, 189, 248, 0.3);
-  border-color: #38bdf8;
+  background: rgba(255, 255, 255, 0.2);
+  border-color: rgba(255, 255, 255, 0.4);
   color: #ffffff;
   transform: translateY(-1px);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
 }
 
 /* Compact Anime Cards inside Message */
@@ -574,7 +577,7 @@
 
 .anibot-card-status {
   font-size: 0.7rem;
-  color: #38bdf8;
+  color: var(--text-dim, #cbd5e1);
 }
 
 .anibot-card-play-btn {
@@ -593,8 +596,9 @@
 }
 
 .anibot-card-play-btn:hover {
-  background: #38bdf8;
-  color: #0f172a;
+  background: rgba(255, 255, 255, 0.25);
+  border-color: rgba(255, 255, 255, 0.4);
+  color: #ffffff;
 }
 
 /* Typing Indicator */
@@ -609,7 +613,7 @@
   width: 6px;
   height: 6px;
   border-radius: 50%;
-  background: #38bdf8;
+  background: #ffffff;
   animation: anibot-typing-bounce 1.4s infinite ease-in-out both;
 }
 
@@ -657,9 +661,9 @@
 }
 
 .anibot-chip-btn:hover {
-  background: rgba(56, 189, 248, 0.2);
-  border-color: rgba(56, 189, 248, 0.4);
-  color: #38bdf8;
+  background: rgba(255, 255, 255, 0.16);
+  border-color: rgba(255, 255, 255, 0.35);
+  color: #ffffff;
   transform: translateY(-1px);
 }
 
@@ -698,8 +702,8 @@
 }
 
 .anibot-textarea:focus {
-  border-color: #38bdf8;
-  box-shadow: 0 0 12px rgba(56, 189, 248, 0.35);
+  border-color: rgba(255, 255, 255, 0.45);
+  box-shadow: 0 0 12px rgba(255, 255, 255, 0.15);
 }
 
 .anibot-textarea::placeholder {
@@ -710,8 +714,8 @@
   width: 40px;
   height: 40px;
   border-radius: var(--radius-md, 14px);
-  background: linear-gradient(135deg, #38bdf8, #a855f7);
-  border: none;
+  background: rgba(255, 255, 255, 0.14);
+  border: 1px solid rgba(255, 255, 255, 0.25);
   color: #ffffff;
   display: flex;
   align-items: center;
@@ -719,11 +723,14 @@
   font-size: 0.95rem;
   cursor: pointer;
   flex-shrink: 0;
-  transition: transform 0.2s ease, opacity 0.2s ease;
+  transition: all 0.2s ease;
 }
 
 .anibot-send-btn:hover:not(:disabled) {
-  transform: scale(1.06);
+  background: rgba(255, 255, 255, 0.25);
+  border-color: rgba(255, 255, 255, 0.45);
+  transform: scale(1.05);
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.3);
 }
 
 .anibot-send-btn:disabled {
@@ -922,22 +929,23 @@
 }
 
 .anibot-gesture-pill:hover {
-  background: linear-gradient(135deg, rgba(56, 189, 248, 0.25), rgba(168, 85, 247, 0.3));
-  border-color: rgba(56, 189, 248, 0.5);
+  background: rgba(255, 255, 255, 0.18);
+  border-color: rgba(255, 255, 255, 0.35);
   color: #ffffff;
   transform: translateY(-1px);
 }
 
 .anibot-gesture-pill.pill-portfolio {
-  background: linear-gradient(135deg, rgba(56, 189, 248, 0.25), rgba(168, 85, 247, 0.3));
-  border-color: rgba(56, 189, 248, 0.5);
+  background: rgba(255, 255, 255, 0.12);
+  border-color: rgba(255, 255, 255, 0.25);
   color: #ffffff;
-  font-weight: 700;
+  font-weight: 600;
 }
 
 .anibot-gesture-pill.pill-portfolio:hover {
-  background: linear-gradient(135deg, rgba(56, 189, 248, 0.45), rgba(168, 85, 247, 0.55));
-  box-shadow: 0 0 12px rgba(56, 189, 248, 0.4);
+  background: rgba(255, 255, 255, 0.22);
+  border-color: rgba(255, 255, 255, 0.45);
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.3);
 }
 
 /* Clickable Avatar in Header with Pet Tooltip */
@@ -959,7 +967,7 @@
   transform: translateX(-50%);
   background: rgba(0, 0, 0, 0.85);
   border: 1px solid rgba(255, 255, 255, 0.2);
-  color: #38bdf8;
+  color: #ffffff;
   font-size: 0.62rem;
   font-weight: 700;
   padding: 1px 5px;
@@ -976,16 +984,16 @@
 
 /* Markdown Link Styling */
 .anibot-msg-bubble a.anibot-link {
-  color: #38bdf8;
+  color: #ffffff;
   text-decoration: underline;
   text-underline-offset: 3px;
   font-weight: 700;
-  transition: color 0.2s ease;
+  transition: color 0.2s ease, opacity 0.2s ease;
 }
 
 .anibot-msg-bubble a.anibot-link:hover {
-  color: #7dd3fc;
-  text-shadow: 0 0 8px rgba(56, 189, 248, 0.4);
+  color: #e2e8f0;
+  opacity: 0.85;
 }
 
 /* Respect Reduced Motion */
