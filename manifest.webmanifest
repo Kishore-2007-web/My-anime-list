@@ -1,0 +1,119 @@
+{
+  "id": "/?source=pwa",
+  "name": "Anime Navigator - Pure Glass Watchlist",
+  "short_name": "AnimeNav",
+  "description": "High-performance, pure glassmorphism anime watchlist and bookmark launcher with instant streaming links.",
+  "start_url": "./",
+  "scope": "./",
+  "display": "standalone",
+  "display_override": ["window-controls-overlay", "standalone", "minimal-ui"],
+  "orientation": "any",
+  "background_color": "#050508",
+  "theme_color": "#050508",
+  "lang": "en-US",
+  "dir": "ltr",
+  "categories": ["entertainment", "utilities", "productivity"],
+  "icons": [
+    {
+      "src": "assets/icons/favicon-32x32.png",
+      "sizes": "32x32",
+      "type": "image/png"
+    },
+    {
+      "src": "assets/icons/icon-192.png",
+      "sizes": "192x192",
+      "type": "image/png",
+      "purpose": "any"
+    },
+    {
+      "src": "assets/icons/icon-512.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "any"
+    },
+    {
+      "src": "assets/icons/icon-maskable-192.png",
+      "sizes": "192x192",
+      "type": "image/png",
+      "purpose": "maskable"
+    },
+    {
+      "src": "assets/icons/icon-maskable-512.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "maskable"
+    },
+    {
+      "src": "assets/icons/icon.svg",
+      "sizes": "any",
+      "type": "image/svg+xml",
+      "purpose": "any"
+    }
+  ],
+  "shortcuts": [
+    {
+      "name": "Quick Add Anime",
+      "short_name": "Quick Add",
+      "description": "Save a new anime bookmark with streaming link",
+      "url": "./?action=add",
+      "icons": [
+        {
+          "src": "assets/icons/icon-192.png",
+          "sizes": "192x192"
+        }
+      ]
+    },
+    {
+      "name": "Currently Watching",
+      "short_name": "Watching",
+      "description": "View anime currently in progress",
+      "url": "./?category=Watching",
+      "icons": [
+        {
+          "src": "assets/icons/icon-192.png",
+          "sizes": "192x192"
+        }
+      ]
+    },
+    {
+      "name": "Plan to Watch",
+      "short_name": "Going to watch",
+      "description": "View planned anime queue",
+      "url": "./?category=Going+to+watch",
+      "icons": [
+        {
+          "src": "assets/icons/icon-192.png",
+          "sizes": "192x192"
+        }
+      ]
+    },
+    {
+      "name": "Completed",
+      "short_name": "Completed",
+      "description": "View completed anime titles",
+      "url": "./?category=Completed",
+      "icons": [
+        {
+          "src": "assets/icons/icon-192.png",
+          "sizes": "192x192"
+        }
+      ]
+    }
+  ],
+  "screenshots": [
+    {
+      "src": "assets/Screenshot 2026-08-28 210335.png",
+      "sizes": "1917x1080",
+      "type": "image/png",
+      "form_factor": "wide",
+      "label": "Anime Navigator Pure Glass Watchlist Grid"
+    },
+    {
+      "src": "assets/Screenshot 2026-08-28 210417.png",
+      "sizes": "1916x1078",
+      "type": "image/png",
+      "form_factor": "wide",
+      "label": "Quick Add Anime Link and Category Form"
+    }
+  ]
+}

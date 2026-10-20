@@ -1,5 +1,7 @@
 /* ==========================================================================
-   ANIME NAVIGATOR - SECURITY & PERFORMANCE HARDENED ENGINE (app.js)
+   ANIME NAVIGATOR - PROGRESSIVE WEB APP & PERFORMANCE ENGINE (app.js)
+   Features: PWA Service Worker Registration, Offline State, App Install Flow,
+             JSON Backup/Restore, Reactive Categories, Defensive Validation
    ========================================================================== */
 
 // CONSTANTS & ALLOWED SCHEMES
@@ -99,8 +101,14 @@ class AnimeNavigator {
     this.searchQuery = "";
     this.currentWallpaperIndex = this.loadWallpaperIndex();
 
+    this.deferredPrompt = null;
+    this.swRegistration = null;
+    this.toastTimer = null;
+
     this.initElements();
     this.initWallpaperBackground();
+    this.initPWA();
+    this.handleInitialQueryParams();
     this.initEventListeners();
     this.render();
   }
@@ -112,7 +120,7 @@ class AnimeNavigator {
         localStorage.setItem(STORAGE_KEY, JSON.stringify(DEFAULT_ANIME_LIST));
         return DEFAULT_ANIME_LIST;
       }
-      
+
       const parsed = JSON.parse(raw);
       if (!Array.isArray(parsed) || parsed.length === 0) {
         return [];
@@ -135,7 +143,7 @@ class AnimeNavigator {
       localStorage.setItem(STORAGE_KEY, JSON.stringify(this.animeList));
     } catch (e) {
       if (e.name === "QuotaExceededError") {
-        alert("Browser storage limit reached. Please remove some bookmarks.");
+        alert("Browser storage limit reached. Please remove some bookmarks or export a backup.");
       } else {
         console.error("Failed to save state to localStorage:", e);
       }
@@ -163,34 +171,362 @@ class AnimeNavigator {
     // Modals
     this.addModal = document.getElementById("add-modal");
     this.editModal = document.getElementById("edit-modal");
+    this.backupModal = document.getElementById("backup-modal");
     this.privacyModal = document.getElementById("privacy-modal");
     this.termsModal = document.getElementById("terms-modal");
+    this.guideModal = document.getElementById("guide-modal");
+    this.openGuideModalBtn = document.getElementById("open-guide-modal-btn");
 
-    // Error message containers
+    // Form Feedback Elements
     this.addErrorMsg = document.getElementById("add-error-msg");
     this.editErrorMsg = document.getElementById("edit-error-msg");
+    this.backupErrorMsg = document.getElementById("backup-error-msg");
+    this.backupSuccessMsg = document.getElementById("backup-success-msg");
+
+    // PWA & Connection Elements
+    this.installPwaBtn = document.getElementById("install-pwa-btn");
+    this.installPwaFooterBtn = document.getElementById("install-pwa-footer-btn");
+    this.homeInstallBanner = document.getElementById("home-install-banner");
+    this.homeInstallActionBtn = document.getElementById("home-install-action-btn");
+    this.homeDismissBannerBtn = document.getElementById("home-dismiss-banner-btn");
+
+    this.installGuideModal = document.getElementById("install-guide-modal");
+    this.installGuideBody = document.getElementById("install-guide-body");
+    this.installModalActionBtn = document.getElementById("install-modal-action-btn");
+    this.closeInstallGuideBtn = document.getElementById("close-install-guide-btn");
+    this.closeInstallGuideModal = document.getElementById("close-install-guide-modal");
+
+    this.connPill = document.getElementById("connection-status-pill");
+    this.connStatusText = document.getElementById("connection-status-text");
+    this.pwaToast = document.getElementById("pwa-update-toast");
+    this.pwaStatusToast = document.getElementById("pwa-status-toast");
+    this.pwaStorageEstimate = document.getElementById("pwa-storage-estimate");
+    this.pwaTotalCount = document.getElementById("pwa-total-count");
+    this.importJsonInput = document.getElementById("import-json-input");
   }
 
   initWallpaperBackground() {
     if (!this.bgWallpaper) return;
     const targetSrc = WALLPAPERS[this.currentWallpaperIndex % WALLPAPERS.length];
-    this.bgWallpaper.style.backgroundImage = `url("${targetSrc}")`;
+    this.bgWallpaper.style.backgroundImage = `url("${encodeURI(targetSrc)}")`;
   }
 
   toggleWallpaper() {
     this.currentWallpaperIndex = (this.currentWallpaperIndex + 1) % WALLPAPERS.length;
     try {
       localStorage.setItem(WALLPAPER_KEY, this.currentWallpaperIndex.toString());
-    } catch (e) {}
+    } catch (e) { }
 
     if (this.bgWallpaper) {
       this.bgWallpaper.style.opacity = "0.3";
       setTimeout(() => {
         const nextWallpaper = WALLPAPERS[this.currentWallpaperIndex % WALLPAPERS.length];
-        this.bgWallpaper.style.backgroundImage = `url("${nextWallpaper}")`;
+        this.bgWallpaper.style.backgroundImage = `url("${encodeURI(nextWallpaper)}")`;
         this.bgWallpaper.style.opacity = "1";
       }, 200);
     }
+  }
+
+  // CHECK IF APP IS INSTALLED
+  isAppInstalled() {
+    // 1. Standard display-mode check (Chrome, Edge, Android PWA)
+    const isStandalone = window.matchMedia && window.matchMedia("(display-mode: standalone)").matches;
+    // 2. iOS Safari standalone check
+    const isIosStandalone = window.navigator.standalone === true;
+    // 3. Android WebAPK / TWA referrer
+    const isTwa = document.referrer && document.referrer.includes("android-app://");
+    // 4. Stored user state if previously installed in this browser
+    const isStoredInstalled = localStorage.getItem("anime_navigator_is_installed") === "true";
+
+    return Boolean(isStandalone || isIosStandalone || isTwa || isStoredInstalled);
+  }
+
+  // UPDATE VISIBILITY OF INSTALL BUTTONS & HOME BANNER
+  updateInstallUiState() {
+    const installed = this.isAppInstalled();
+
+    if (installed) {
+      if (this.homeInstallBanner) this.homeInstallBanner.style.display = "none";
+      if (this.installPwaBtn) this.installPwaBtn.style.display = "none";
+      if (this.installPwaFooterBtn) this.installPwaFooterBtn.style.display = "none";
+      return;
+    }
+
+    // Website is not yet installed:
+    // Header & footer install buttons are always visible until installed
+    if (this.installPwaBtn) this.installPwaBtn.style.display = "inline-flex";
+    if (this.installPwaFooterBtn) this.installPwaFooterBtn.style.display = "inline-flex";
+
+    // Show Home Install Banner only on Home tab (if not dismissed for this session)
+    const isHomeTab = this.currentNav === "Home";
+    const isDismissed = sessionStorage.getItem("pwa_banner_dismissed") === "true";
+
+    if (this.homeInstallBanner) {
+      this.homeInstallBanner.style.display = (isHomeTab && !isDismissed) ? "flex" : "none";
+    }
+  }
+
+  // PROGRESSIVE WEB APP (PWA) INITIALIZATION
+  initPWA() {
+    // 1. Register Service Worker with Auto Update Detection
+    if ("serviceWorker" in navigator) {
+      window.addEventListener("load", () => {
+        navigator.serviceWorker.register("./sw.js")
+          .then((reg) => {
+            this.swRegistration = reg;
+            console.log("[PWA] Service Worker registered with scope:", reg.scope);
+
+            if (reg.waiting) {
+              this.showUpdateToast(reg.waiting);
+            }
+
+            reg.addEventListener("updatefound", () => {
+              const newWorker = reg.installing;
+              if (!newWorker) return;
+
+              newWorker.addEventListener("statechange", () => {
+                if (newWorker.state === "installed" && navigator.serviceWorker.controller) {
+                  this.showUpdateToast(newWorker);
+                }
+              });
+            });
+          })
+          .catch((err) => {
+            console.warn("[PWA] Service Worker registration failed:", err);
+          });
+
+        let refreshing = false;
+        navigator.serviceWorker.addEventListener("controllerchange", () => {
+          if (!refreshing) {
+            refreshing = true;
+            window.location.reload();
+          }
+        });
+      });
+    }
+
+    // 2. Install Prompt Listener (beforeinstallprompt)
+    window.addEventListener("beforeinstallprompt", (e) => {
+      e.preventDefault();
+      this.deferredPrompt = e;
+      this.updateInstallUiState();
+    });
+
+    // 3. App Installed Listener
+    window.addEventListener("appinstalled", () => {
+      localStorage.setItem("anime_navigator_is_installed", "true");
+      this.deferredPrompt = null;
+      this.updateInstallUiState();
+      if (this.installGuideModal) this.installGuideModal.classList.remove("active");
+      this.showStatusToast("🎉 Anime Navigator successfully installed!");
+    });
+
+    // 4. Standalone Display Mode Change Listener
+    try {
+      window.matchMedia("(display-mode: standalone)").addEventListener("change", (e) => {
+        if (e.matches) {
+          localStorage.setItem("anime_navigator_is_installed", "true");
+        }
+        this.updateInstallUiState();
+      });
+    } catch (e) { }
+
+    // 5. Initial Install UI Setup
+    this.updateInstallUiState();
+
+    // 6. Online / Offline Monitoring
+    this.updateOnlineStatus();
+    window.addEventListener("online", () => {
+      this.updateOnlineStatus();
+      this.showStatusToast("🟢 Back online. Direct streaming links active.");
+    });
+    window.addEventListener("offline", () => {
+      this.updateOnlineStatus();
+      this.showStatusToast("🟡 Offline mode. Accessing cached watchlist.");
+    });
+  }
+
+  // PWA INSTALL TRIGGER (DIRECT OR SMART GUIDE)
+  async promptInstall() {
+    if (this.deferredPrompt) {
+      try {
+        this.deferredPrompt.prompt();
+        const { outcome } = await this.deferredPrompt.userChoice;
+        console.log("[PWA] User response to install:", outcome);
+        if (outcome === "accepted") {
+          localStorage.setItem("anime_navigator_is_installed", "true");
+          this.deferredPrompt = null;
+          this.updateInstallUiState();
+          if (this.installGuideModal) this.installGuideModal.classList.remove("active");
+          this.showStatusToast("🎉 Anime Navigator installed as an app!");
+        }
+      } catch (err) {
+        this.openInstallGuideModal();
+      }
+    } else {
+      this.openInstallGuideModal();
+    }
+  }
+
+  // SMART INSTALL GUIDE MODAL FOR ALL PLATFORMS
+  openInstallGuideModal() {
+    if (!this.installGuideModal || !this.installGuideBody) return;
+
+    const ua = navigator.userAgent || "";
+    const isIOS = /iPad|iPhone|iPod/.test(ua) && !window.MSStream;
+    const isAndroid = /Android/.test(ua);
+
+    let deviceTag = `<span class="guide-device-tag"><i class="fa-solid fa-desktop"></i> Desktop Browser</span>`;
+    let stepsHtml = "";
+
+    if (isIOS) {
+      deviceTag = `<span class="guide-device-tag"><i class="fa-brands fa-apple"></i> iOS Safari</span>`;
+      stepsHtml = `
+        <div class="guide-step-item">
+          <div class="guide-step-num">1</div>
+          <div class="guide-step-text">Tap the <strong>Share</strong> button <i class="fa-solid fa-arrow-up-from-bracket" style="color:#38bdf8;"></i> in the Safari toolbar.</div>
+        </div>
+        <div class="guide-step-item">
+          <div class="guide-step-num">2</div>
+          <div class="guide-step-text">Scroll down the share sheet and tap <strong>Add to Home Screen</strong> <i class="fa-solid fa-square-plus" style="color:#a855f7;"></i>.</div>
+        </div>
+        <div class="guide-step-item">
+          <div class="guide-step-num">3</div>
+          <div class="guide-step-text">Tap <strong>Add</strong> in the top right corner. Anime Navigator will appear on your home screen!</div>
+        </div>
+      `;
+    } else if (isAndroid) {
+      deviceTag = `<span class="guide-device-tag"><i class="fa-brands fa-android"></i> Android Chrome / Browser</span>`;
+      stepsHtml = `
+        <div class="guide-step-item">
+          <div class="guide-step-num">1</div>
+          <div class="guide-step-text">Tap the browser menu <strong>(⋮)</strong> in the top right corner.</div>
+        </div>
+        <div class="guide-step-item">
+          <div class="guide-step-num">2</div>
+          <div class="guide-step-text">Select <strong>Install app</strong> or <strong>Add to Home screen</strong>.</div>
+        </div>
+        <div class="guide-step-item">
+          <div class="guide-step-num">3</div>
+          <div class="guide-step-text">Confirm the prompt to install Anime Navigator as a native standalone app.</div>
+        </div>
+      `;
+    } else {
+      stepsHtml = `
+        <div class="guide-step-item">
+          <div class="guide-step-num">1</div>
+          <div class="guide-step-text">Look for the <strong>Install</strong> icon <i class="fa-solid fa-download" style="color:#38bdf8;"></i> on the right side of your browser's address bar.</div>
+        </div>
+        <div class="guide-step-item">
+          <div class="guide-step-num">2</div>
+          <div class="guide-step-text">Or open browser menu <strong>(⋮)</strong> &rarr; Select <strong>Install Anime Navigator</strong>.</div>
+        </div>
+        <div class="guide-step-item">
+          <div class="guide-step-num">3</div>
+          <div class="guide-step-text">Click <strong>Install</strong> to launch Anime Navigator in its own dedicated, borderless glass window.</div>
+        </div>
+      `;
+    }
+
+    this.installGuideBody.innerHTML = `
+      ${deviceTag}
+      <div class="install-guide-steps">
+        ${stepsHtml}
+      </div>
+    `;
+
+    if (this.installModalActionBtn) {
+      if (this.deferredPrompt) {
+        this.installModalActionBtn.style.display = "inline-flex";
+        this.installModalActionBtn.onclick = () => this.promptInstall();
+      } else {
+        this.installModalActionBtn.style.display = "none";
+      }
+    }
+
+    this.installGuideModal.classList.add("active");
+  }
+
+  showUpdateToast(worker) {
+    if (!this.pwaToast) return;
+    this.pwaToast.style.display = "flex";
+
+    const reloadBtn = document.getElementById("pwa-update-reload-btn");
+    const dismissBtn = document.getElementById("pwa-update-dismiss-btn");
+
+    if (reloadBtn) {
+      reloadBtn.onclick = () => {
+        worker.postMessage({ type: "SKIP_WAITING" });
+        this.pwaToast.style.display = "none";
+      };
+    }
+
+    if (dismissBtn) {
+      dismissBtn.onclick = () => {
+        this.pwaToast.style.display = "none";
+      };
+    }
+  }
+
+  updateOnlineStatus() {
+    const isOnline = navigator.onLine;
+    if (!this.connPill) return;
+
+    if (isOnline) {
+      this.connPill.className = "connection-pill online";
+      if (this.connStatusText) this.connStatusText.textContent = "Online";
+    } else {
+      this.connPill.className = "connection-pill offline";
+      if (this.connStatusText) this.connStatusText.textContent = "Offline";
+    }
+  }
+
+  showStatusToast(msg) {
+    if (!this.pwaStatusToast) return;
+    this.pwaStatusToast.textContent = msg;
+    this.pwaStatusToast.style.display = "flex";
+
+    clearTimeout(this.toastTimer);
+    this.toastTimer = setTimeout(() => {
+      if (this.pwaStatusToast) {
+        this.pwaStatusToast.style.display = "none";
+      }
+    }, 4500);
+  }
+
+  handleInitialQueryParams() {
+    try {
+      const params = new URLSearchParams(window.location.search);
+      const action = params.get("action");
+      const category = params.get("category");
+
+      if (action === "add") {
+        setTimeout(() => {
+          this.clearError(this.addErrorMsg);
+          this.addModal.classList.add("active");
+        }, 250);
+      } else if (category && ALLOWED_CATEGORIES.includes(category)) {
+        this.currentNav = category;
+        document.querySelectorAll(".nav-link").forEach((el) => {
+          el.classList.toggle("active", el.getAttribute("data-nav") === category);
+        });
+      }
+    } catch (e) {
+      console.warn("Failed to parse URL query params:", e);
+    }
+  }
+
+  // Switch category navigation programmatically
+  switchNav(category) {
+    const validNav = ALLOWED_CATEGORIES.includes(category) ? category : "Home";
+    this.currentNav = validNav;
+    document.querySelectorAll(".nav-link").forEach(el => {
+      const match = validNav === "Home" ? el.id === "nav-home" : el.getAttribute("data-nav") === validNav;
+      el.classList.toggle("active", Boolean(match));
+
+    });
+    this.updateInstallUiState();
+    this.render();
   }
 
   initEventListeners() {
@@ -204,6 +540,7 @@ class AnimeNavigator {
 
       const navAttr = link.getAttribute("data-nav");
       this.currentNav = ALLOWED_CATEGORIES.includes(navAttr) ? navAttr : "Home";
+      this.updateInstallUiState();
       this.render();
     });
 
@@ -213,6 +550,7 @@ class AnimeNavigator {
       document.querySelectorAll(".nav-link").forEach(el => el.classList.remove("active"));
       document.getElementById("nav-home").classList.add("active");
       this.currentNav = "Home";
+      this.updateInstallUiState();
       this.render();
     });
 
@@ -220,6 +558,39 @@ class AnimeNavigator {
     const wallpaperBtn = document.getElementById("toggle-wallpaper-btn");
     if (wallpaperBtn) {
       wallpaperBtn.addEventListener("click", () => this.toggleWallpaper());
+    }
+
+    // PWA Install Buttons
+    if (this.installPwaBtn) {
+      this.installPwaBtn.addEventListener("click", () => this.promptInstall());
+    }
+    if (this.installPwaFooterBtn) {
+      this.installPwaFooterBtn.addEventListener("click", () => this.promptInstall());
+    }
+
+    // Home Install Banner Buttons
+    if (this.homeInstallActionBtn) {
+      this.homeInstallActionBtn.addEventListener("click", () => this.promptInstall());
+    }
+    if (this.homeDismissBannerBtn) {
+      this.homeDismissBannerBtn.addEventListener("click", () => {
+        sessionStorage.setItem("pwa_banner_dismissed", "true");
+        if (this.homeInstallBanner) {
+          this.homeInstallBanner.style.display = "none";
+        }
+      });
+    }
+
+    // Install Guide Modal Close Buttons
+    if (this.closeInstallGuideBtn) {
+      this.closeInstallGuideBtn.addEventListener("click", () => {
+        if (this.installGuideModal) this.installGuideModal.classList.remove("active");
+      });
+    }
+    if (this.closeInstallGuideModal) {
+      this.closeInstallGuideModal.addEventListener("click", () => {
+        if (this.installGuideModal) this.installGuideModal.classList.remove("active");
+      });
     }
 
     // Search Input
@@ -257,6 +628,40 @@ class AnimeNavigator {
       this.handleDelete();
     });
 
+    // Backup & Data Manager Buttons
+    const backupBtn = document.getElementById("open-backup-modal-btn");
+    if (backupBtn) {
+      backupBtn.addEventListener("click", () => this.openBackupModal());
+    }
+    const backupFooterBtn = document.getElementById("open-backup-modal-btn-footer");
+    if (backupFooterBtn) {
+      backupFooterBtn.addEventListener("click", () => this.openBackupModal());
+    }
+    document.getElementById("close-backup-modal").addEventListener("click", () => {
+      this.backupModal.classList.remove("active");
+    });
+
+    document.getElementById("export-json-btn").addEventListener("click", () => {
+      this.exportBackup();
+    });
+
+    document.getElementById("import-json-btn").addEventListener("click", () => {
+      if (this.importJsonInput) this.importJsonInput.click();
+    });
+
+    if (this.importJsonInput) {
+      this.importJsonInput.addEventListener("change", (e) => {
+        if (e.target.files && e.target.files[0]) {
+          this.importBackupFile(e.target.files[0]);
+          e.target.value = "";
+        }
+      });
+    }
+
+    document.getElementById("clear-all-data-btn").addEventListener("click", () => {
+      this.clearAllSavedData();
+    });
+
     // Privacy & Terms Modals
     const privacyBtn = document.getElementById("open-privacy-modal-btn");
     if (privacyBtn) {
@@ -274,18 +679,42 @@ class AnimeNavigator {
       this.termsModal.classList.remove("active");
     });
 
+    // User Guide Modal
+    if (this.openGuideModalBtn) {
+      this.openGuideModalBtn.addEventListener("click", () => {
+        if (this.guideModal) this.guideModal.classList.add("active");
+      });
+    }
+    const closeGuideModal = document.getElementById("close-guide-modal");
+    if (closeGuideModal) {
+      closeGuideModal.addEventListener("click", () => {
+        if (this.guideModal) this.guideModal.classList.remove("active");
+      });
+    }
+    const closeGuideModalBtn = document.getElementById("close-guide-modal-btn");
+    if (closeGuideModalBtn) {
+      closeGuideModalBtn.addEventListener("click", () => {
+        if (this.guideModal) this.guideModal.classList.remove("active");
+      });
+    }
+
     // Close modals on backdrop click
-    [this.addModal, this.editModal, this.privacyModal, this.termsModal].forEach(modal => {
+    const allModals = [this.addModal, this.editModal, this.backupModal, this.privacyModal, this.termsModal, this.installGuideModal, this.guideModal];
+    allModals.forEach(modal => {
       if (!modal) return;
       modal.addEventListener("click", (e) => {
         if (e.target === modal) modal.classList.remove("active");
       });
     });
 
-    // Handle Window Resize for Auto Performance Adaptability
-    window.addEventListener("resize", () => {
-      if (window.innerWidth <= 768 && !this.isPerfMode) {
-        // Option to adaptively reduce GPU load
+    // Close modals on Escape key press
+    document.addEventListener("keydown", (e) => {
+      if (e.key === "Escape") {
+        allModals.forEach(modal => {
+          if (modal && modal.classList.contains("active")) {
+            modal.classList.remove("active");
+          }
+        });
       }
     });
   }
@@ -406,6 +835,9 @@ class AnimeNavigator {
       // Card Click Safe Window Launch
       card.addEventListener("click", () => {
         if (isSafeHttpsUrl(anime.link)) {
+          if (!navigator.onLine) {
+            this.showStatusToast("⚠️ You are offline. Launching external watch links requires active internet.");
+          }
           window.open(anime.link, "_blank", "noopener,noreferrer");
         } else {
           alert("Unable to open link. Please edit the bookmark and verify the URL.");
@@ -474,6 +906,7 @@ class AnimeNavigator {
 
     document.getElementById("add-anime-form").reset();
     this.addModal.classList.remove("active");
+    this.showStatusToast(`Saved "${newAnime.title}" to ${newAnime.status}`);
   }
 
   openEditModal(id) {
@@ -531,6 +964,7 @@ class AnimeNavigator {
     this.render();
 
     this.editModal.classList.remove("active");
+    this.showStatusToast(`Updated "${anime.title}"`);
   }
 
   handleDelete() {
@@ -542,6 +976,7 @@ class AnimeNavigator {
       this.saveState();
       this.render();
       this.editModal.classList.remove("active");
+      this.showStatusToast(`Removed "${anime.title}"`);
     }
   }
 
@@ -563,6 +998,146 @@ class AnimeNavigator {
     document.getElementById("count-going").textContent = counts["Going to watch"].toString();
     document.getElementById("count-ongoing").textContent = counts["Ongoing-follow-up"].toString();
     document.getElementById("count-completed").textContent = counts["Completed"].toString();
+  }
+
+  // -----------------------------------------------------------
+  // BACKUP, RESTORE & STORAGE QUOTA MANAGEMENT
+  // -----------------------------------------------------------
+  openBackupModal() {
+    this.clearError(this.backupErrorMsg);
+    if (this.backupSuccessMsg) {
+      this.backupSuccessMsg.textContent = "";
+      this.backupSuccessMsg.style.display = "none";
+    }
+    if (this.pwaTotalCount) {
+      this.pwaTotalCount.textContent = `${this.animeList.length} items`;
+    }
+    this.calculateStorageEstimate();
+    this.backupModal.classList.add("active");
+  }
+
+  async calculateStorageEstimate() {
+    if (!this.pwaStorageEstimate) return;
+    if ("storage" in navigator && "estimate" in navigator.storage) {
+      try {
+        const { quota, usage } = await navigator.storage.estimate();
+        const usedMb = (usage / (1024 * 1024)).toFixed(2);
+        const quotaMb = (quota / (1024 * 1024)).toFixed(0);
+        this.pwaStorageEstimate.textContent = `${usedMb} MB used (of ~${quotaMb} MB)`;
+      } catch (e) {
+        this.pwaStorageEstimate.textContent = "Available";
+      }
+    } else {
+      const bytes = new Blob([JSON.stringify(this.animeList)]).size;
+      this.pwaStorageEstimate.textContent = `~${(bytes / 1024).toFixed(1)} KB (LocalStorage)`;
+    }
+  }
+
+  exportBackup() {
+    try {
+      const exportPayload = {
+        app: "Anime Navigator",
+        version: "4.0",
+        exportedAt: new Date().toISOString(),
+        totalCount: this.animeList.length,
+        animeList: this.animeList
+      };
+
+      const jsonStr = JSON.stringify(exportPayload, null, 2);
+      const blob = new Blob([jsonStr], { type: "application/json;charset=utf-8" });
+      const url = URL.createObjectURL(blob);
+      const a = document.createElement("a");
+      const dateStr = new Date().toISOString().split("T")[0];
+      a.href = url;
+      a.download = `anime-navigator-backup-${dateStr}.json`;
+      document.body.appendChild(a);
+      a.click();
+      document.body.removeChild(a);
+      URL.revokeObjectURL(url);
+
+      this.showBackupSuccess(`Exported ${this.animeList.length} bookmarks successfully!`);
+    } catch (e) {
+      this.showError(this.backupErrorMsg, "Failed to export watchlist: " + e.message);
+    }
+  }
+
+  importBackupFile(file) {
+    if (!file) return;
+    this.clearError(this.backupErrorMsg);
+
+    const reader = new FileReader();
+    reader.onload = (e) => {
+      try {
+        const parsed = JSON.parse(e.target.result);
+        const items = Array.isArray(parsed) ? parsed : (Array.isArray(parsed.animeList) ? parsed.animeList : null);
+
+        if (!items) {
+          this.showError(this.backupErrorMsg, "Invalid JSON backup file. No anime items found.");
+          return;
+        }
+
+        const validItems = [];
+        for (const item of items) {
+          const validated = validateAnimeItem(item);
+          if (validated) validItems.push(validated);
+        }
+
+        if (validItems.length === 0) {
+          this.showError(this.backupErrorMsg, "No valid anime bookmarks found in the imported file.");
+          return;
+        }
+
+        const shouldReplace = confirm(
+          `Found ${validItems.length} bookmarks in backup file.\n\n` +
+          `• Click 'OK' to REPLACE your current list.\n` +
+          `• Click 'Cancel' to MERGE with current list without duplicates.`
+        );
+
+        if (shouldReplace) {
+          this.animeList = validItems.slice(0, MAX_WATCHLIST_LIMIT);
+        } else {
+          // Merge: avoid duplicates by matching title and link
+          const existingMap = new Set(this.animeList.map(a => a.title.toLowerCase() + "||" + a.link));
+          for (const item of validItems) {
+            const key = item.title.toLowerCase() + "||" + item.link;
+            if (!existingMap.has(key) && this.animeList.length < MAX_WATCHLIST_LIMIT) {
+              existingMap.add(key);
+              this.animeList.push(item);
+            }
+          }
+        }
+
+        this.saveState();
+        this.render();
+        this.calculateStorageEstimate();
+        if (this.pwaTotalCount) {
+          this.pwaTotalCount.textContent = `${this.animeList.length} items`;
+        }
+        this.showBackupSuccess(`Import complete! Watchlist now has ${this.animeList.length} anime entries.`);
+      } catch (err) {
+        this.showError(this.backupErrorMsg, "Could not parse JSON file: " + err.message);
+      }
+    };
+    reader.readAsText(file);
+  }
+
+  showBackupSuccess(msg) {
+    if (!this.backupSuccessMsg) return;
+    this.backupSuccessMsg.textContent = msg;
+    this.backupSuccessMsg.style.display = "block";
+  }
+
+  clearAllSavedData() {
+    if (confirm("Are you sure you want to delete ALL saved anime bookmarks? This cannot be undone unless you have a backup file.")) {
+      this.animeList = [];
+      this.saveState();
+      this.render();
+      this.calculateStorageEstimate();
+      if (this.pwaTotalCount) {
+        this.pwaTotalCount.textContent = "0 items";
+      }
+      this.showBackupSuccess("All watchlist data has been cleared.");
+    }
   }
 }
 

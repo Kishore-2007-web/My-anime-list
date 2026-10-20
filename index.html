@@ -4,13 +4,133 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0">
-    <title>Anime Navigator - Pure Glass Watchlist</title>
+    
+    <!-- Primary SEO Metadata -->
+    <title>Anime Navigator — Pure Glass Watchlist & Anime Web Launcher</title>
+    <meta name="title" content="Anime Navigator — Pure Glass Watchlist & Anime Web Launcher">
+    <meta name="description"
+        content="Anime Navigator is a high-performance, private, glassmorphic anime watchlist tracker and web launcher. Organize anime bookmarks, enjoy live wallpapers, and launch streaming sites instantly offline and online.">
+    <meta name="keywords"
+        content="anime watchlist, anime tracker, anime bookmarks, anime web launcher, anime navigator, glassmorphism pwa, offline anime list, anime stream launcher, private anime organizer, anime bookmark manager, hianime launcher, crunchyroll launcher">
+    <meta name="author" content="Anime Navigator">
+    <meta name="robots" content="index, follow, max-image-preview:large, max-snippet:-1, max-video-preview:-1">
+    <link rel="canonical" href="https://my-anime-list.vercel.app/">
+
+    <!-- Open Graph / Facebook / Discord Meta Tags -->
+    <meta property="og:type" content="website">
+    <meta property="og:site_name" content="Anime Navigator">
+    <meta property="og:title" content="Anime Navigator — Pure Glass Watchlist & Anime Web Launcher">
+    <meta property="og:description"
+        content="Organize your personal anime watchlist with pure glassmorphism aesthetics, live video wallpapers, and instant 1-click streaming links. 100% private, offline PWA.">
+    <meta property="og:image" content="https://my-anime-list.vercel.app/assets/icons/icon-512.png">
+    <meta property="og:image:width" content="512">
+    <meta property="og:image:height" content="512">
+    <meta property="og:image:alt" content="Anime Navigator Glass Compass Emblem">
+    <meta property="og:url" content="https://my-anime-list.vercel.app/">
+    <meta property="og:locale" content="en_US">
+
+    <!-- Twitter Card Meta Tags -->
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:title" content="Anime Navigator — Pure Glass Watchlist & Anime Web Launcher">
+    <meta name="twitter:description"
+        content="Organize your anime watchlist with pure glassmorphism aesthetics, live video wallpapers, and instant 1-click streaming links. 100% private, offline PWA.">
+    <meta name="twitter:image" content="https://my-anime-list.vercel.app/assets/icons/icon-512.png">
+    <meta name="twitter:image:alt" content="Anime Navigator Glass Compass Emblem">
+
+    <!-- Mobile & PWA Configuration -->
+    <meta name="theme-color" content="#050508">
+    <meta name="application-name" content="Anime Navigator">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    <meta name="apple-mobile-web-app-title" content="AnimeNav">
+    <meta name="format-detection" content="telephone=no">
+    <meta name="mobile-web-app-capable" content="yes">
+
+    <!-- Web App Manifest & Favicons -->
+    <link rel="manifest" href="manifest.webmanifest">
+    <link rel="icon" type="image/svg+xml" href="assets/icons/favicon.svg">
+    <link rel="icon" type="image/png" sizes="32x32" href="assets/icons/favicon-32x32.png">
+    <link rel="icon" type="image/png" sizes="16x16" href="assets/icons/favicon-16x16.png">
+    <link rel="apple-touch-icon" href="assets/icons/apple-touch-icon.png">
+    <link rel="apple-touch-icon" sizes="180x180" href="assets/icons/apple-touch-icon.png">
+    <link rel="mask-icon" href="assets/icons/favicon.svg" color="#a855f7">
 
     <!-- Security & Privacy Meta Headers -->
     <meta http-equiv="Content-Security-Policy"
-        content="default-src 'self'; script-src 'self'; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com https://cdnjs.cloudflare.com; font-src 'self' https://fonts.gstatic.com https://cdnjs.cloudflare.com; img-src 'self' https: data:; media-src 'self'; object-src 'none'; base-uri 'self';">
+        content="default-src 'self'; script-src 'self'; worker-src 'self'; connect-src 'self' http://localhost:11434 https:; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com https://cdnjs.cloudflare.com; font-src 'self' https://fonts.gstatic.com https://cdnjs.cloudflare.com; img-src 'self' https: data:; media-src 'self'; object-src 'none'; base-uri 'self';">
     <meta name="referrer" content="strict-origin-when-cross-origin">
     <meta http-equiv="X-Content-Type-Options" content="nosniff">
+
+    <!-- Schema.org JSON-LD Structured Data for Rich Snippets -->
+    <script type="application/ld+json">
+    {
+      "@context": "https://schema.org",
+      "@graph": [
+        {
+          "@type": "WebApplication",
+          "@id": "https://my-anime-list.vercel.app/#webapp",
+          "name": "Anime Navigator",
+          "url": "https://my-anime-list.vercel.app/",
+          "applicationCategory": "EntertainmentApplication",
+          "operatingSystem": "All (Web, Windows, macOS, Android, iOS)",
+          "browserRequirements": "Requires HTML5, LocalStorage, and Modern Web Standards",
+          "description": "A high-performance, private, glassmorphic anime watchlist tracker and web launcher with live wallpapers, categorized bookmarks, and offline Progressive Web App (PWA) support.",
+          "offers": {
+            "@type": "Offer",
+            "price": "0",
+            "priceCurrency": "USD"
+          },
+          "featureList": [
+            "Pure Glassmorphism UI Design",
+            "1-Click Direct Anime Web Launcher",
+            "Offline Progressive Web App (PWA)",
+            "Multi-Category Watchlist Management",
+            "Full-Site Video & Image Wallpapers",
+            "Cross-Device JSON Backup and Restore",
+            "Zero Tracking & Local Storage Privacy"
+          ]
+        },
+        {
+          "@type": "FAQPage",
+          "@id": "https://my-anime-list.vercel.app/#faq",
+          "mainEntity": [
+            {
+              "@type": "Question",
+              "name": "Is my anime watchlist data private?",
+              "acceptedAnswer": {
+                "@type": "Answer",
+                "text": "Yes. All anime titles, poster links, categories, and watch URLs are stored 100% locally on your device in your browser's LocalStorage and offline cache. Anime Navigator uses zero tracking cookies, user accounts, or cloud databases."
+              }
+            },
+            {
+              "@type": "Question",
+              "name": "Can I use Anime Navigator offline?",
+              "acceptedAnswer": {
+                "@type": "Answer",
+                "text": "Yes. Anime Navigator is a full Progressive Web App (PWA) powered by a Service Worker that caches the application shell and poster images. You can view, search, and manage your watchlist without an internet connection."
+              }
+            },
+            {
+              "@type": "Question",
+              "name": "Does Anime Navigator host or stream anime episodes directly?",
+              "acceptedAnswer": {
+                "@type": "Answer",
+                "text": "No. Anime Navigator is a personal bookmark manager and web launcher. When you click an anime card, it opens your saved direct link to legal or third-party streaming websites in a safe, isolated browser tab."
+              }
+            },
+            {
+              "@type": "Question",
+              "name": "How do I sync or backup my watchlist between my phone and computer?",
+              "acceptedAnswer": {
+                "@type": "Answer",
+                "text": "Click the 'Data' button in the header and choose 'Export JSON'. You can then transfer the backup file to your phone, tablet, or another browser and choose 'Import Backup' to instantly sync your bookmarks."
+              }
+            }
+          ]
+        }
+      ]
+    }
+    </script>
 
     <!-- Google Fonts & Font Awesome Icons -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -19,7 +139,8 @@
         rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
 
-    <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="style.css?v=1.5.0">
+    <link rel="stylesheet" href="anibot.css?v=1.5.0">
 </head>
 
 <body>
@@ -32,9 +153,9 @@
 
         <!-- HEADER & CATEGORY NAVIGATOR -->
         <header class="site-header">
-            <a href="#" class="brand-logo" id="brand-home-btn">
+            <a href="#" class="brand-logo" id="brand-home-btn" title="Anime Navigator Home">
                 <div class="brand-icon"><i class="fa-solid fa-compass"></i></div>
-                <div class="brand-title">ANIME<span>NAVIGATOR</span></div>
+                <h1 class="brand-title">ANIME<span>NAVIGATOR</span></h1>
             </a>
 
             <!-- Navigation Headers -->
@@ -61,11 +182,18 @@
 
             <!-- Action Controls -->
             <div class="header-actions">
+                <!-- PWA Install Button (Visible on site until installed) -->
+                <button class="btn-glass-accent btn-pwa-install" id="install-pwa-btn" title="Install Anime Navigator as Web App">
+                    <i class="fa-solid fa-download"></i> <span>Install App</span>
+                </button>
+                <button class="btn-glass-secondary" id="open-backup-modal-btn" title="Backup & Restore Watchlist Data">
+                    <i class="fa-solid fa-database"></i> <span>Data</span>
+                </button>
                 <button class="btn-glass-secondary" id="toggle-wallpaper-btn" title="Switch Background Wallpaper">
-                    <i class="fa-solid fa-image"></i> Wallpaper
+                    <i class="fa-solid fa-image"></i> <span>Wallpaper</span>
                 </button>
                 <button class="btn-glass-primary" id="open-add-modal-btn">
-                    <i class="fa-solid fa-plus"></i> Quick Add
+                    <i class="fa-solid fa-plus"></i> <span>Quick Add</span>
                 </button>
             </div>
         </header>
@@ -77,7 +205,36 @@
                 <input type="text" id="search-input" class="search-input" placeholder="Search saved anime titles..."
                     maxlength="150">
             </div>
-            <div class="active-count-tag" id="active-list-count">0 Saved Anime</div>
+            <div class="controls-right-group">
+                <!-- Real-time Online / Offline Status Pill -->
+                <div class="connection-pill online" id="connection-status-pill" title="Network Connection Status">
+                    <span class="status-dot"></span>
+                    <span class="status-text" id="connection-status-text">Online</span>
+                </div>
+                <div class="active-count-tag" id="active-list-count">0 Saved Anime</div>
+            </div>
+        </section>
+
+        <!-- HOME PWA INSTALL PROMPT BANNER (Visible on Home until installed) -->
+        <section class="home-install-banner" id="home-install-banner">
+            <div class="install-banner-left">
+                <div class="install-banner-badge">
+                    <img src="assets/icons/favicon-32x32.png" alt="Anime Navigator Icon" class="install-banner-app-icon">
+                    <span>Web App Available</span>
+                </div>
+                <h2 class="install-banner-title">Install Anime Navigator on Your Device</h2>
+                <p class="install-banner-desc">
+                    Get the complete standalone app experience with fullscreen live wallpapers, instant offline access, and 1-tap launching from your home screen or desktop.
+                </p>
+            </div>
+            <div class="install-banner-right">
+                <button class="btn-install-banner" id="home-install-action-btn">
+                    <i class="fa-solid fa-download"></i> <span>Install App Now</span>
+                </button>
+                <button class="btn-dismiss-banner" id="home-dismiss-banner-btn" aria-label="Dismiss banner" title="Dismiss for now">
+                    <i class="fa-solid fa-xmark"></i>
+                </button>
+            </div>
         </section>
 
         <!-- ANIME GRID CONTAINER -->
@@ -88,6 +245,15 @@
         <!-- SITE FOOTER WITH PRIVACY & SECURITY LINKS -->
         <footer class="site-footer">
             <div class="footer-links">
+                <button class="footer-btn" id="install-pwa-footer-btn" style="display:none;">
+                    <i class="fa-solid fa-mobile-screen"></i> Install App
+                </button>
+                <button class="footer-btn" id="open-backup-modal-btn-footer">
+                    <i class="fa-solid fa-database"></i> Backup & Restore
+                </button>
+                <button class="footer-btn" id="open-guide-modal-btn">
+                    <i class="fa-solid fa-book-open"></i> User Guide
+                </button>
                 <button class="footer-btn" id="open-privacy-modal-btn">
                     <i class="fa-solid fa-shield-halved"></i> Privacy & Security
                 </button>
@@ -95,7 +261,7 @@
                     <i class="fa-solid fa-file-contract"></i> Terms of Use
                 </button>
             </div>
-            <div class="footer-note">Anime Navigator • Local Browser Bookmark Tool • Privacy First</div>
+            <div class="footer-note">Anime Navigator • Progressive Web App (PWA) • Offline Ready • Local Storage • Privacy First</div>
         </footer>
 
     </div>
@@ -199,6 +365,64 @@
         </div>
     </div>
 
+    <!-- DATA BACKUP & RESTORE MODAL -->
+    <div class="modal-backdrop" id="backup-modal">
+        <div class="modal-content" style="max-width: 580px;">
+            <button class="modal-close-btn" id="close-backup-modal" aria-label="Close modal">&times;</button>
+
+            <div class="modal-header-text">
+                <h2><i class="fa-solid fa-database" style="color:#38bdf8;"></i> Watchlist Data & Backup</h2>
+                <p>Export your bookmarks to JSON or import from another device. 100% offline & private.</p>
+            </div>
+
+            <div class="form-error-msg" id="backup-error-msg" role="alert" aria-live="polite" style="display:none;"></div>
+            <div class="form-success-msg" id="backup-success-msg" role="alert" aria-live="polite" style="display:none;"></div>
+
+            <div class="backup-grid">
+                <div class="backup-card">
+                    <div class="backup-card-icon"><i class="fa-solid fa-file-arrow-down"></i></div>
+                    <h3>Export Backup</h3>
+                    <p>Save all your categorized bookmarks as a <code>.json</code> file on your device.</p>
+                    <button type="button" class="btn-glass-primary" id="export-json-btn">
+                        <i class="fa-solid fa-download"></i> Export JSON
+                    </button>
+                </div>
+
+                <div class="backup-card">
+                    <div class="backup-card-icon"><i class="fa-solid fa-file-arrow-up"></i></div>
+                    <h3>Import Backup</h3>
+                    <p>Restore anime bookmarks from a JSON file. Choose merge or overwrite.</p>
+                    <input type="file" id="import-json-input" accept=".json,application/json" style="display:none;">
+                    <button type="button" class="btn-glass-secondary" id="import-json-btn">
+                        <i class="fa-solid fa-upload"></i> Select File
+                    </button>
+                </div>
+            </div>
+
+            <!-- PWA & Storage Status Info -->
+            <div class="pwa-info-box">
+                <div class="pwa-info-row">
+                    <span><i class="fa-solid fa-cloud-arrow-down"></i> PWA Offline Status:</span>
+                    <strong id="pwa-status-text">Active (Ready Offline)</strong>
+                </div>
+                <div class="pwa-info-row">
+                    <span><i class="fa-solid fa-hard-drive"></i> Storage Quota:</span>
+                    <strong id="pwa-storage-estimate">Calculating...</strong>
+                </div>
+                <div class="pwa-info-row">
+                    <span><i class="fa-solid fa-bookmark"></i> Total Bookmarks:</span>
+                    <strong id="pwa-total-count">0 items</strong>
+                </div>
+            </div>
+
+            <div class="modal-danger-zone">
+                <button type="button" class="btn-glass-danger-outline" id="clear-all-data-btn">
+                    <i class="fa-solid fa-triangle-exclamation"></i> Clear All Saved Anime
+                </button>
+            </div>
+        </div>
+    </div>
+
     <!-- PRIVACY & SECURITY INFO MODAL -->
     <div class="modal-backdrop" id="privacy-modal">
         <div class="modal-content" style="max-width: 600px;">
@@ -209,19 +433,17 @@
             </div>
 
             <div class="modal-scroll-body">
-                <p><strong style="color:#fff;">1. Local Storage Only:</strong> All anime titles, poster image URLs,
-                    category statuses, and watch links are stored locally in your browser (`localStorage`). No server
-                    database, user accounts, or cloud storage exist.</p>
+                <p><strong style="color:#fff;">1. Progressive Web App & Offline Cache:</strong> Anime Navigator uses
+                    Service Worker technology to cache the application shell and your watchlist. All your anime titles,
+                    posters, and links remain securely stored inside your device's browser (`localStorage` and Cache API).</p>
                 <p><strong style="color:#fff;">2. Zero Data Collection & Tracking:</strong> Anime Navigator does NOT use
                     analytics, cookies, tracking pixels, advertisement networks, or user fingerprinting scripts.</p>
                 <p><strong style="color:#fff;">3. External Web Links:</strong> Saved watch links redirect to third-party
-                    external websites in a new tab with strict `noopener,noreferrer` tab isolation. External websites
-                    operate independently under their own privacy policies.</p>
-                <p><strong style="color:#fff;">4. Data Control & Deletion:</strong> You have full control over your
-                    data. You can delete individual entries using the edit menu or clear all saved data anytime by
-                    clearing your browser's site data.</p>
+                    external websites in a new tab with strict `noopener,noreferrer` tab isolation.</p>
+                <p><strong style="color:#fff;">4. Data Backup & Control:</strong> You can export and import your complete
+                    watchlist JSON anytime using the Data manager to sync between your phone, tablet, and PC.</p>
                 <p><strong style="color:#fff;">5. Security Reporting:</strong> Vulnerabilities or security concerns can
-                    be responsibly disclosed through our official GitHub repository issue tracker.</p>
+                    be responsibly disclosed through our official repository issue tracker.</p>
             </div>
         </div>
     </div>
@@ -246,12 +468,131 @@
                     third-party site safety.</p>
                 <p><strong style="color:#fff;">4. Local Storage Disclaimer:</strong> Data is saved in browser
                     `localStorage`. Clearing browser data or using private/incognito mode may result in local data loss.
-                </p>
+                    Use the Export Backup feature to regularly keep a copy of your bookmarks.</p>
             </div>
         </div>
     </div>
 
-    <script src="app.js"></script>
+    <!-- INSTALL GUIDE MODAL (Instructions for iOS / Desktop / Android) -->
+    <div class="modal-backdrop" id="install-guide-modal">
+        <div class="modal-content" style="max-width: 520px;">
+            <button class="modal-close-btn" id="close-install-guide-modal" aria-label="Close modal">&times;</button>
+
+            <div class="modal-header-text">
+                <h2><i class="fa-solid fa-mobile-screen-button" style="color:#38bdf8;"></i> Install Anime Navigator</h2>
+                <p>Install this Web App for full-screen mode, live video wallpapers, and instant offline access.</p>
+            </div>
+
+            <div class="install-guide-body" id="install-guide-body">
+                <!-- Dynamically populated based on detected device / OS -->
+            </div>
+
+            <div style="margin-top: 1.5rem; display: flex; gap: 0.75rem;">
+                <button type="button" class="btn-glass-primary" id="install-modal-action-btn" style="flex: 1;">
+                    <i class="fa-solid fa-download"></i> Install App
+                </button>
+                <button type="button" class="btn-glass-secondary" id="close-install-guide-btn">
+                    Got it
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- USER GUIDE & DOCUMENTATION MODAL -->
+    <div class="modal-backdrop" id="guide-modal">
+        <div class="modal-content" style="max-width: 680px;">
+            <button class="modal-close-btn" id="close-guide-modal" aria-label="Close modal">&times;</button>
+
+            <div class="modal-header-text">
+                <h2><i class="fa-solid fa-book-open" style="color:#38bdf8;"></i> Anime Navigator User Guide</h2>
+                <p>Complete documentation & pro tips for managing your anime watchlist offline and across devices.</p>
+            </div>
+
+            <div class="modal-scroll-body user-guide-body">
+                <div class="guide-feature-card">
+                    <div class="guide-feature-icon"><i class="fa-solid fa-bolt"></i></div>
+                    <div class="guide-feature-text">
+                        <h4>1. Quick Add Bookmarks</h4>
+                        <p>Click <strong>+ Add Anime</strong> in the header navigation. Enter the title, an image URL (supports any HTTPS poster image), select your category, and paste your direct watch link.</p>
+                    </div>
+                </div>
+
+                <div class="guide-feature-card">
+                    <div class="guide-feature-icon"><i class="fa-solid fa-play"></i></div>
+                    <div class="guide-feature-text">
+                        <h4>2. Direct Stream Launching</h4>
+                        <p>Click any anime card anywhere to directly launch your saved stream in a secure new tab. To edit title, status, poster, or stream URL, click the <i class="fa-solid fa-pen-to-square"></i> pencil icon.</p>
+                    </div>
+                </div>
+
+                <div class="guide-feature-card">
+                    <div class="guide-feature-icon"><i class="fa-solid fa-layer-group"></i></div>
+                    <div class="guide-feature-text">
+                        <h4>3. Category Management</h4>
+                        <p>Organize your titles into 4 focused categories: <em>Watching</em>, <em>Going to watch</em>, <em>Ongoing-follow-up</em>, and <em>Completed</em>. Badges in the header display real-time counts.</p>
+                    </div>
+                </div>
+
+                <div class="guide-feature-card">
+                    <div class="guide-feature-icon"><i class="fa-solid fa-download"></i></div>
+                    <div class="guide-feature-text">
+                        <h4>4. Progressive Web App (PWA) & Offline Access</h4>
+                        <p>Install Anime Navigator to your home screen or desktop taskbar. The application shell is pre-cached with service workers, allowing offline access to your full catalog anytime.</p>
+                    </div>
+                </div>
+
+                <div class="guide-feature-card">
+                    <div class="guide-feature-icon"><i class="fa-solid fa-database"></i></div>
+                    <div class="guide-feature-text">
+                        <h4>5. JSON Data Backup & Sync</h4>
+                        <p>All data stays in your browser's private local storage. Use <strong>Backup & Restore</strong> in the footer to export your entire watchlist to a portable JSON file or import onto another device.</p>
+                    </div>
+                </div>
+
+                <div class="guide-feature-card">
+                    <div class="guide-feature-icon"><i class="fa-solid fa-image"></i></div>
+                    <div class="guide-feature-text">
+                        <h4>6. Live Dynamic Wallpapers</h4>
+                        <p>Click the <strong>Wallpaper icon</strong> (<i class="fa-solid fa-image"></i>) in the header to cycle through curated high-definition anime background themes. Your selection persists automatically.</p>
+                    </div>
+                </div>
+
+                <div class="guide-feature-card">
+                    <div class="guide-feature-icon"><i class="fa-solid fa-keyboard"></i></div>
+                    <div class="guide-feature-text">
+                        <h4>7. Keyboard Shortcuts</h4>
+                        <p><kbd>Esc</kbd> closes any open dialog or modal. Fast filtering is available instantly via the search bar with live character matching.</p>
+                    </div>
+                </div>
+            </div>
+
+            <div style="margin-top: 1.5rem; display: flex; justify-content: flex-end;">
+                <button type="button" class="btn-glass-primary" id="close-guide-modal-btn">
+                    <i class="fa-solid fa-check"></i> Close Guide
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- FLOATING PWA UPDATE TOAST -->
+    <div class="pwa-toast" id="pwa-update-toast" role="alert" style="display:none;">
+        <div class="pwa-toast-icon"><i class="fa-solid fa-arrows-rotate fa-spin"></i></div>
+        <div class="pwa-toast-content">
+            <div class="pwa-toast-title">New Version Available</div>
+            <div class="pwa-toast-desc">Update ready to activate for latest improvements.</div>
+        </div>
+        <button class="btn-pwa-toast-action" id="pwa-update-reload-btn">Update</button>
+        <button class="btn-pwa-toast-close" id="pwa-update-dismiss-btn" aria-label="Dismiss">&times;</button>
+    </div>
+
+    <!-- FLOATING PWA CONNECTION TOAST -->
+    <div class="pwa-status-toast" id="pwa-status-toast" style="display:none;"></div>
+
+    <script src="scripts/anibot-mascot.js?v=1.5.0"></script>
+    <script src="scripts/anibot-knowledge.js?v=1.5.0"></script>
+    <script src="scripts/anibot-service.js?v=1.5.0"></script>
+    <script src="scripts/anibot-ui.js?v=1.5.0"></script>
+    <script src="app.js?v=1.5.0"></script>
 </body>
 
 </html>

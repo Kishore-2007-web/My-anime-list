@@ -1,0 +1,8 @@
+# Anime Navigator - Robots Configuration
+# https://www.robotstxt.org/robotstxt.html
+
+User-agent: *
+Allow: /
+
+# Sitemap Location
+Sitemap: https://my-anime-list.vercel.app/sitemap.xml
