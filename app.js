@@ -13,7 +13,56 @@ const MAX_URL_LEN = 2048;
 const MAX_WATCHLIST_LIMIT = 500;
 
 const ALLOWED_CATEGORIES = ["Watching", "Going to watch", "Ongoing-follow-up", "Completed"];
-const DEFAULT_POSTER = "https://images.unsplash.com/photo-1578632767115-351597cf2477?q=80&w=800&auto=format&fit=crop";
+// GUARANTEED OFFLINE VECTOR ANIME POSTER GENERATOR
+function getAnimeFallbackPoster(title = "Anime", status = "Watching") {
+  const safeTitle = (title || "Anime").replace(/[<>&"']/g, "");
+  const colorMap = {
+    "Watching": { glow: "#38bdf8", badge: "#38bdf8" },
+    "Going to watch": { glow: "#f43f5e", badge: "#f43f5e" },
+    "Ongoing-follow-up": { glow: "#f59e0b", badge: "#f59e0b" },
+    "Completed": { glow: "#a855f7", badge: "#a855f7" }
+  };
+  const theme = colorMap[status] || { glow: "#38bdf8", badge: "#38bdf8" };
+
+  const svg = `<svg xmlns="http://www.w3.org/2000/svg" width="400" height="560" viewBox="0 0 400 560">
+    <defs>
+      <linearGradient id="bg" x1="0%" y1="0%" x2="100%" y2="100%">
+        <stop offset="0%" stop-color="#141424" />
+        <stop offset="60%" stop-color="#0d0d18" />
+        <stop offset="100%" stop-color="#080810" />
+      </linearGradient>
+      <radialGradient id="emblem-glow" cx="50%" cy="40%" r="55%">
+        <stop offset="0%" stop-color="${theme.glow}" stop-opacity="0.32" />
+        <stop offset="100%" stop-color="${theme.glow}" stop-opacity="0" />
+      </radialGradient>
+      <linearGradient id="star-grad" x1="0%" y1="0%" x2="100%" y2="100%">
+        <stop offset="0%" stop-color="#ffffff" />
+        <stop offset="50%" stop-color="${theme.glow}" />
+        <stop offset="100%" stop-color="#38bdf8" />
+      </linearGradient>
+    </defs>
+    <rect width="400" height="560" fill="url(#bg)" />
+    <circle cx="200" cy="210" r="150" fill="url(#emblem-glow)" />
+    <circle cx="200" cy="210" r="70" fill="none" stroke="rgba(255,255,255,0.15)" stroke-width="1.5" stroke-dasharray="4 6" />
+    <circle cx="200" cy="210" r="54" fill="rgba(255,255,255,0.04)" stroke="${theme.glow}" stroke-width="1.5" stroke-opacity="0.4" />
+    <g transform="translate(176, 186)">
+      <path d="M24 0 L31 17 L48 24 L31 31 L24 48 L17 31 L0 24 L17 17 Z" fill="url(#star-grad)" />
+      <circle cx="24" cy="24" r="5.5" fill="#ffffff" />
+      <circle cx="24" cy="24" r="2.5" fill="#0f172a" />
+    </g>
+    <text x="200" y="320" font-family="-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,sans-serif" font-size="12" font-weight="700" fill="${theme.glow}" text-anchor="middle" letter-spacing="4" opacity="0.9">ANIME NAVIGATOR</text>
+    <text x="200" y="360" font-family="-apple-system,BlinkMacSystemFont,'Plus Jakarta Sans','Segoe UI',Roboto,sans-serif" font-size="20" font-weight="800" fill="#ffffff" text-anchor="middle" letter-spacing="0.5">${safeTitle.length > 22 ? safeTitle.substring(0, 20) + "..." : safeTitle}</text>
+    <g transform="translate(140, 385)">
+      <rect width="120" height="24" rx="12" fill="rgba(0,0,0,0.6)" stroke="${theme.badge}" stroke-width="1" />
+      <text x="60" y="16" font-family="-apple-system,BlinkMacSystemFont,sans-serif" font-size="11" font-weight="700" fill="${theme.badge}" text-anchor="middle">${status}</text>
+    </g>
+    <line x1="60" y1="460" x2="340" y2="460" stroke="rgba(255,255,255,0.12)" stroke-width="1" />
+  </svg>`;
+
+  return `data:image/svg+xml;charset=utf-8,${encodeURIComponent(svg)}`;
+}
+
+const DEFAULT_POSTER = getAnimeFallbackPoster("Anime", "Watching");
 
 const WALLPAPERS = [
   "assets/Screenshot 2026-08-28 210335.png",
@@ -66,6 +115,30 @@ function isSafeHttpsUrl(value) {
   }
 }
 
+// CENTRALIZED SECURE IMAGE URL PARSER
+function isSafeImageUrl(value) {
+  if (!value || typeof value !== "string") return false;
+  const trimmed = value.trim();
+  if (trimmed.length === 0 || trimmed.length > 200000) return false;
+  if (
+    trimmed.startsWith("data:image/svg+xml") ||
+    trimmed.startsWith("data:image/png") ||
+    trimmed.startsWith("data:image/jpeg") ||
+    trimmed.startsWith("data:image/webp")
+  ) {
+    return true;
+  }
+  if (trimmed.startsWith("./") || trimmed.startsWith("assets/")) {
+    return true;
+  }
+  try {
+    const parsed = new URL(trimmed);
+    return (parsed.protocol === "https:" || parsed.protocol === "http:") && parsed.hostname.length > 0;
+  } catch (e) {
+    return false;
+  }
+}
+
 // SAFE UUID GENERATOR
 function generateSafeId() {
   if (typeof crypto !== "undefined" && typeof crypto.randomUUID === "function") {
@@ -88,7 +161,7 @@ function validateAnimeItem(item) {
   if (!ALLOWED_CATEGORIES.includes(status)) return null;
   if (!isSafeHttpsUrl(link)) return null;
 
-  const safePoster = isSafeHttpsUrl(poster) ? poster : DEFAULT_POSTER;
+  const safePoster = isSafeImageUrl(poster) ? poster : getAnimeFallbackPoster(title, status);
 
   return { id, title, poster: safePoster, status, link };
 }
@@ -798,12 +871,20 @@ class AnimeNavigator {
 
       const img = document.createElement("img");
       img.className = "card-poster";
-      img.src = anime.poster;
       img.alt = anime.title;
       img.loading = "lazy";
       img.setAttribute("decoding", "async");
-      img.setAttribute("referrerpolicy", "no-referrer");
-      img.onerror = () => { img.src = DEFAULT_POSTER; };
+
+      // Verify if poster URL is valid; if empty/missing, immediately use vector fallback
+      const initialPoster = (anime.poster && typeof anime.poster === "string" && anime.poster.trim().length > 0 && isSafeImageUrl(anime.poster))
+        ? anime.poster.trim()
+        : getAnimeFallbackPoster(anime.title, anime.status);
+
+      img.src = initialPoster;
+      img.onerror = function () {
+        this.onerror = null; // Guard against recursive error loops
+        this.src = getAnimeFallbackPoster(anime.title, anime.status);
+      };
 
       posterWrap.appendChild(badge);
       posterWrap.appendChild(editBtn);
@@ -876,13 +957,13 @@ class AnimeNavigator {
       return;
     }
 
-    if (poster.length > 0 && !isSafeHttpsUrl(poster)) {
-      this.showError(this.addErrorMsg, "Invalid poster image URL. Only secure HTTPS image URLs are allowed.");
+    if (poster.length > 0 && !isSafeImageUrl(poster)) {
+      this.showError(this.addErrorMsg, "Invalid poster image URL.");
       return;
     }
 
     if (!poster) {
-      poster = DEFAULT_POSTER;
+      poster = getAnimeFallbackPoster(title, status);
     }
 
     // Duplicate Check
@@ -950,13 +1031,13 @@ class AnimeNavigator {
       return;
     }
 
-    if (poster.length > 0 && !isSafeHttpsUrl(poster)) {
-      this.showError(this.editErrorMsg, "Invalid poster image URL. Only secure HTTPS image URLs are allowed.");
+    if (poster.length > 0 && !isSafeImageUrl(poster)) {
+      this.showError(this.editErrorMsg, "Invalid poster image URL.");
       return;
     }
 
     anime.title = title;
-    anime.poster = poster ? poster : DEFAULT_POSTER;
+    anime.poster = poster ? poster : getAnimeFallbackPoster(title, status);
     anime.status = status;
     anime.link = link;
 

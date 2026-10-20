@@ -408,7 +408,7 @@ select option {
   width: 100%;
   padding-top: 140%;
   overflow: hidden;
-  background: #09090e;
+  background: linear-gradient(135deg, rgba(25, 25, 40, 0.95), rgba(12, 12, 22, 0.98));
 }
 
 .card-poster {

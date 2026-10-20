@@ -5,7 +5,7 @@
              Safe Fallback, Immediate Activation on Update
    ========================================================================== */
 
-const CACHE_VERSION = 'anime-nav-v1.7.0';
+const CACHE_VERSION = 'anime-nav-v1.8.0';
 const STATIC_CACHE = `${CACHE_VERSION}-static`;
 const RUNTIME_CACHE = `${CACHE_VERSION}-runtime`;
 const IMAGE_CACHE = `${CACHE_VERSION}-images`;
@@ -132,23 +132,36 @@ self.addEventListener('fetch', (event) => {
     return;
   }
 
-  // 2. Images (Anime Posters & Icons)
-  // Strategy: Cache-first with Network background revalidation and cache update
+  // 2. Images (Anime Posters, Wallpapers & Icons)
+  // Cache-first with resilient network fetch (standard no-cors support, never force mode: 'cors')
   if (isImageRequest(request)) {
     event.respondWith(
-      caches.open(IMAGE_CACHE).then(async (cache) => {
+      (async () => {
+        const cache = await caches.open(IMAGE_CACHE);
         const cachedResponse = await cache.match(request);
-        const fetchPromise = fetch(request, { mode: 'cors' })
-          .then((networkResponse) => {
-            if (networkResponse && (networkResponse.ok || networkResponse.type === 'opaque')) {
-              cache.put(request, networkResponse.clone());
-            }
-            return networkResponse;
-          })
-          .catch(() => cachedResponse);
+        if (cachedResponse) {
+          // Revalidate in background without blocking
+          fetch(request)
+            .then((networkResponse) => {
+              if (networkResponse && (networkResponse.ok || networkResponse.type === 'opaque')) {
+                cache.put(request, networkResponse.clone());
+              }
+            })
+            .catch(() => {});
+          return cachedResponse;
+        }
 
-        return cachedResponse || fetchPromise;
-      })
+        try {
+          const networkResponse = await fetch(request);
+          if (networkResponse && (networkResponse.ok || networkResponse.type === 'opaque')) {
+            cache.put(request, networkResponse.clone());
+          }
+          return networkResponse;
+        } catch (err) {
+          if (cachedResponse) return cachedResponse;
+          throw err;
+        }
+      })()
     );
     return;
   }
