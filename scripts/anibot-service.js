@@ -101,7 +101,10 @@
       const cfg = this.getConfig();
       if (!cfg.enabled) return null;
 
-      const systemPrompt = `You are ANIBOT, a cute, friendly, kawaii anime cat-girl AI companion for the website 'Anime Navigator' (created by Kishore).
+      const systemPrompt = `You are ANIBOT, a cute, friendly, kawaii anime cat-girl AI companion for the website 'Anime Navigator' created by Kishore.
+Website creator: Kishore (V. Kishore).
+Kishore's official portfolio link: https://kishore-portfolio-2026.vercel.app
+Whenever the user asks who created this website, who made you, or who the developer is, ALWAYS proudly and enthusiastically state that it was created by Kishore and provide his portfolio link: https://kishore-portfolio-2026.vercel.app
 Keep responses concise, sweet, helpful, and anime-themed (using occasional expressions like "Nyaa!", "Sugoi!", "Senpai!").
 Never invent anime titles or user data not provided below.
 Current real user anime collection:
@@ -173,12 +176,63 @@ Tech: HTML5, CSS Glassmorphism, Vanilla JS, PWA with LocalStorage.`;
       // 1. GREETING
       if (/^(hi|hello|hey|konnichiwa|kon'nichiwa|nya|nyaa|ohayo|moshi|yo\b|greetings)/i.test(text)) {
         return {
-          text: `Kon'nichiwa! ✨ I'm **ANIBOT**, your personal anime watchlist companion! Nyaa~ \n\nI can check your saved anime, show watchlist statistics, guide you through features, or tell you about this website. What would you like to explore today? 🐾`,
-          expression: "happy",
+          text: `Kon'nichiwa! ✨ I'm **ANIBOT**, your personal anime watchlist companion! Nyaa~ \n\nI can check your saved anime, show watchlist statistics, guide you through features, show you cute gestures, or tell you about my creator **Kishore**! What would you like to explore today? 🐾`,
+          expression: "wave",
+          gesture: "wave",
           actions: [
             { label: "📊 Anime Summary", query: "Give me a summary of my anime collection" },
             { label: "👀 What am I watching?", query: "What am I watching right now?" },
-            { label: "➕ How to add anime", query: "How do I add an anime?" }
+            { label: "✨ Who created this site?", query: "Who created this website?" }
+          ]
+        };
+      }
+
+      // 1B. GESTURES & PETTING REACTIONS
+      if (/(pet|headpat|pat\b|good girl|cute\b|kawaii|purr)/i.test(text)) {
+        return {
+          text: `Nyaa~ 💕 *purrs happily* Ehehe, thank you so much for the headpats, Senpai! That tickles in the best way! 🐾✨`,
+          expression: "heart",
+          gesture: "pet",
+          actions: [
+            { label: "🐾 Pet Again", actionType: "trigger-gesture", payload: "pet" },
+            { label: "👋 Wave", actionType: "trigger-gesture", payload: "wave" },
+            { label: "✨ Dance", actionType: "trigger-gesture", payload: "bounce" }
+          ]
+        };
+      }
+
+      if (/(wave to me|say hi to me|do a wave|wave paw)/i.test(text)) {
+        return {
+          text: `Hai hai! *waves cute paw energetically* ✨ Hello there, Senpai! Always so happy to see you! 🐾`,
+          expression: "wave",
+          gesture: "wave",
+          actions: [
+            { label: "🐾 Pet ANIBOT", actionType: "trigger-gesture", payload: "pet" },
+            { label: "🎉 Dance", actionType: "trigger-gesture", payload: "bounce" }
+          ]
+        };
+      }
+
+      if (/(dance|bounce|hop|jump|do a flip|celebrate)/i.test(text)) {
+        return {
+          text: `Yatta! 🎉 *happy bouncy joyful anime dance* Look at me go! Anime makes every single day sparkle! ✨🐾`,
+          expression: "celebrate",
+          gesture: "bounce",
+          actions: [
+            { label: "💖 Send Love", query: "I love you ANIBOT" },
+            { label: "🐾 Pet Head", actionType: "trigger-gesture", payload: "pet" }
+          ]
+        };
+      }
+
+      if (/(love you|i love anibot|daisuki|heart|marry me)/i.test(text)) {
+        return {
+          text: `Daisuki! 💖 *blushes with radiant glowing heart eyes* You're the kindest master ever, Senpai! ANIBOT will always be by your side! 💕`,
+          expression: "heart",
+          gesture: "pet",
+          actions: [
+            { label: "🐾 Pet ANIBOT", actionType: "trigger-gesture", payload: "pet" },
+            { label: "🌐 Kishore's Portfolio", actionType: "open-url", payload: "https://kishore-portfolio-2026.vercel.app" }
           ]
         };
       }
@@ -496,11 +550,17 @@ Tech: HTML5, CSS Glassmorphism, Vanilla JS, PWA with LocalStorage.`;
         };
       }
 
-      // 18. FAQ: CREATOR
-      if (/(who created|who made|who is kishore|developer|author|owner|built by)/i.test(text)) {
+      // 18. FAQ: CREATOR & PORTFOLIO
+      if (/(who (created|made|built|designed|developed)|who is kishore|created by|creator|developer|portfolio|author|owner|kishore)/i.test(text)) {
         return {
-          text: `Anime Navigator was created by **Kishore** (**V. Kishore**)! ✨\n\nHe built it as a high-performance, private anime bookmark navigator with pure glassmorphism aesthetics, live wallpapers, and zero annoying ads or tracking.`,
-          expression: "happy"
+          text: `Anime Navigator and ANIBOT were created and engineered by **Kishore** (**V. Kishore**)! ✨🐱\n\nHe designed this entire website with pure glassmorphic aesthetics, offline PWA capabilities, and local companion intelligence with zero tracking or ads.\n\nYou can explore his creative projects, developer portfolio, and contact details here:\n🌐 **[kishore-portfolio-2026.vercel.app](https://kishore-portfolio-2026.vercel.app)**`,
+          expression: "celebrate",
+          gesture: "bounce",
+          actions: [
+            { label: "🌐 Visit Kishore's Portfolio", actionType: "open-url", payload: "https://kishore-portfolio-2026.vercel.app" },
+            { label: "👋 Wave to Kishore", actionType: "trigger-gesture", payload: "wave" },
+            { label: "🐾 Pet ANIBOT", actionType: "trigger-gesture", payload: "pet" }
+          ]
         };
       }
 

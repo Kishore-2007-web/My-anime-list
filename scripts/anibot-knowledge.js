@@ -12,7 +12,8 @@
       shortName: "Anime Navigator",
       creator: "Kishore (V. Kishore)",
       creatorHandle: "@Kishore",
-      version: "1.4.0",
+      creatorPortfolio: "https://kishore-portfolio-2026.vercel.app",
+      version: "1.7.0",
       purpose: "A private, glassmorphic personal anime watchlist manager and direct 1-click web launcher.",
       techStack: [
         "Semantic HTML5",
@@ -121,9 +122,9 @@
     faqs: [
       {
         id: "creator",
-        keywords: ["creator", "who made", "who created", "developer", "author", "owner", "built by"],
+        keywords: ["creator", "created", "who created", "who made", "who built", "developer", "author", "owner", "built by", "portfolio", "kishore", "who is kishore"],
         question: "Who created this website?",
-        answer: "Anime Navigator was created by **Kishore** (**V. Kishore**)! ✨ He designed it as a personal, high-performance anime bookmark launcher with pure glass aesthetics and offline PWA capability."
+        answer: "Anime Navigator and ANIBOT were created by **Kishore** (**V. Kishore**)! ✨🐱\n\nHe designed and engineered this platform with pure glassmorphic aesthetics, offline PWA capability, and private local intelligence.\n\nYou can explore his creative projects, developer portfolio, and contact details here:\n🌐 **[kishore-portfolio-2026.vercel.app](https://kishore-portfolio-2026.vercel.app)**"
       },
       {
         id: "purpose",

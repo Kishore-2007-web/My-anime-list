@@ -1,5 +1,6 @@
 /* ==========================================================================
-   ANIBOT UI CONTROLLER - FLOATING LAUNCHER, CHAT INTERFACE & INTERACTIVITY
+   ANIBOT UI CONTROLLER - FLOATING LAUNCHER, CHAT INTERFACE & GESTURE SYSTEM
+   Pure Glassmorphism Aesthetics • Micro-Animations • Physical Gestures
    ========================================================================== */
 
 (function (window, document) {
@@ -66,7 +67,7 @@
         <!-- Header -->
         <div class="anibot-header">
           <div class="anibot-header-profile">
-            <div class="anibot-header-avatar" id="anibot-header-avatar">
+            <div class="anibot-header-avatar" id="anibot-header-avatar" title="Click to pet ANIBOT! 🐾">
               ${window.AnibotMascot ? window.AnibotMascot.renderAvatar('happy', 40) : '🐱'}
             </div>
             <div class="anibot-header-info">
@@ -95,17 +96,26 @@
           </div>
         </div>
 
+        <!-- Interactive Gestures Reaction Bar -->
+        <div class="anibot-gestures-bar" id="anibot-gestures-bar">
+          <button type="button" class="anibot-gesture-pill" data-gesture="wave" title="Wave to ANIBOT">👋 Wave</button>
+          <button type="button" class="anibot-gesture-pill" data-gesture="pet" title="Pet ANIBOT on the head">🐾 Pet Head</button>
+          <button type="button" class="anibot-gesture-pill" data-gesture="bounce" title="Dance & Bounce">✨ Dance</button>
+          <button type="button" class="anibot-gesture-pill" data-gesture="heart" title="Send Love">💖 Love</button>
+          <button type="button" class="anibot-gesture-pill pill-portfolio" data-action-type="open-url" data-payload="https://kishore-portfolio-2026.vercel.app" title="Visit Creator Kishore's Portfolio">🌐 Kishore</button>
+        </div>
+
         <!-- Messages Stream -->
         <div class="anibot-messages-stream" id="anibot-messages-stream"></div>
 
         <!-- Suggestion Chips Bar -->
         <div class="anibot-chips-bar" id="anibot-chips-bar">
+          <button type="button" class="anibot-chip-btn" data-query="Who created this website?">✨ Who created this site?</button>
           <button type="button" class="anibot-chip-btn" data-query="What anime have I added?">What anime have I added?</button>
           <button type="button" class="anibot-chip-btn" data-query="How many anime are in my list?">How many in my list?</button>
           <button type="button" class="anibot-chip-btn" data-query="Which anime am I currently watching?">What am I watching?</button>
           <button type="button" class="anibot-chip-btn" data-query="How do I add an anime?">How do I add an anime?</button>
-          <button type="button" class="anibot-chip-btn" data-query="Who created this website?">Who created this site?</button>
-          <button type="button" class="anibot-chip-btn" data-query="What can you help me with?">What can you do?</button>
+          <button type="button" class="anibot-chip-btn" data-query="Can you wave to me?">👋 Wave to me</button>
         </div>
 
         <!-- Input Area -->
@@ -114,7 +124,7 @@
             <textarea
               class="anibot-textarea"
               id="anibot-input-textarea"
-              placeholder="Ask ANIBOT anything about your anime..."
+              placeholder="Ask ANIBOT anything about your anime or creator..."
               rows="1"
               maxlength="500"
               aria-label="Message ANIBOT"
@@ -163,6 +173,7 @@
       this.inputTextarea = document.getElementById('anibot-input-textarea');
       this.sendBtn = document.getElementById('anibot-send-btn');
       this.chipsBar = document.getElementById('anibot-chips-bar');
+      this.gesturesBar = document.getElementById('anibot-gestures-bar');
       this.headerAvatar = document.getElementById('anibot-header-avatar');
       this.ollamaModal = document.getElementById('anibot-ollama-modal');
     }
@@ -185,6 +196,30 @@
         }
         this.open();
       });
+
+      // Interactive Click on Header Avatar: Pet Head & Spawn Hearts
+      if (this.headerAvatar) {
+        this.headerAvatar.addEventListener('click', () => {
+          this.playGesture('pet', true);
+        });
+      }
+
+      // Quick Gestures Bar Delegation
+      if (this.gesturesBar) {
+        this.gesturesBar.addEventListener('click', (e) => {
+          const pill = e.target.closest('.anibot-gesture-pill');
+          if (!pill) return;
+          const gesture = pill.getAttribute('data-gesture');
+          const actionType = pill.getAttribute('data-action-type');
+          const payload = pill.getAttribute('data-payload');
+
+          if (gesture) {
+            this.playGesture(gesture, true);
+          } else if (actionType) {
+            this.handleAction(actionType, payload);
+          }
+        });
+      }
 
       // Controls
       document.getElementById('anibot-close-btn').addEventListener('click', () => this.close());
@@ -267,6 +302,7 @@
       sessionStorage.setItem('anibot_teaser_dismissed', 'true');
       this.scrollToBottom();
       setTimeout(() => this.inputTextarea.focus(), 150);
+      this.playGesture('wave', false);
     }
 
     close() {
@@ -295,15 +331,104 @@
       }
     }
 
+    // -------------------------------------------------------------
+    // GESTURES & ANIMATION SYSTEM
+    // -------------------------------------------------------------
+    playGesture(gestureName, triggerDialogue = false) {
+      const valid = ['wave', 'bounce', 'nod', 'tilt', 'purr', 'pet', 'heart'].includes(gestureName)
+        ? gestureName
+        : 'bounce';
+
+      // Set expression corresponding to gesture
+      const exprMap = {
+        wave: 'wave',
+        bounce: 'celebrate',
+        nod: 'happy',
+        tilt: 'thinking',
+        purr: 'heart',
+        pet: 'heart',
+        heart: 'heart'
+      };
+      this.setExpression(exprMap[valid] || 'happy');
+
+      // Target elements to animate
+      const targets = [];
+      if (this.headerAvatar) targets.push(this.headerAvatar);
+      const launcherWrap = document.getElementById('anibot-launcher-mascot-wrap');
+      if (launcherWrap) targets.push(launcherWrap);
+
+      const animClass = `anibot-gesture-${valid === 'heart' ? 'bounce' : valid}`;
+      targets.forEach(el => {
+        el.classList.remove(
+          'anibot-gesture-wave',
+          'anibot-gesture-bounce',
+          'anibot-gesture-nod',
+          'anibot-gesture-tilt',
+          'anibot-gesture-purr',
+          'anibot-gesture-pet'
+        );
+        void el.offsetWidth; // Force CSS reflow
+        el.classList.add(animClass);
+      });
+
+      // Spawn floating hearts on pet or heart gesture
+      if (valid === 'pet' || valid === 'heart') {
+        this.spawnHeartParticles();
+      }
+
+      // Revert animation class after duration
+      setTimeout(() => {
+        targets.forEach(el => el.classList.remove(animClass));
+      }, 1300);
+
+      // Optional trigger dialogue for direct user button clicks
+      if (triggerDialogue) {
+        const dialogueMap = {
+          wave: { text: "Hai hai! *waves cute paw* ✨ Always so wonderful to see you, Senpai! 🐾", expr: "wave" },
+          pet: { text: "Nyaa~ 💕 *purrs happily* Ehehe, thank you so much for the headpats, Senpai! 💕 That feels wonderful!", expr: "heart" },
+          bounce: { text: "Yatta! 🎉 *happy bouncy joyful dance* Look at me go! Anime makes every day brighter! ✨", expr: "celebrate" },
+          heart: { text: "Daisuki! 💖 *blushes with radiant glowing heart eyes* You're the kindest anime master ever! 💕", expr: "heart" }
+        };
+        if (dialogueMap[valid]) {
+          this.appendMessage({
+            sender: 'bot',
+            text: dialogueMap[valid].text,
+            expression: dialogueMap[valid].expr
+          });
+        }
+      }
+    }
+
+    spawnHeartParticles() {
+      const anchor = this.isOpen && this.headerAvatar ? this.headerAvatar : this.launcherBtn;
+      if (!anchor) return;
+      const rect = anchor.getBoundingClientRect();
+      const emojis = ['💖', '💕', '✨', '🐾', '🌸'];
+
+      for (let i = 0; i < 4; i++) {
+        const heart = document.createElement('div');
+        heart.className = 'anibot-pet-heart';
+        heart.textContent = emojis[i % emojis.length];
+        heart.style.left = `${rect.left + rect.width / 2}px`;
+        heart.style.top = `${rect.top}px`;
+        heart.style.setProperty('--tx', `${(Math.random() - 0.5) * 60}px`);
+        document.body.appendChild(heart);
+
+        setTimeout(() => heart.remove(), 1300);
+      }
+    }
+
     loadWelcomeMessage() {
       const welcome = {
         sender: 'bot',
-        text: `Kon'nichiwa! I'm **ANIBOT**! ✨ Your little anime-list companion. \n\nWant to check your watchlist, discover your list statistics, or learn how this website works? Nyaa~`,
-        expression: 'happy',
+        text: `Kon'nichiwa! I'm **ANIBOT**! ✨ Your personal anime companion. \n\nI can track your watchlist, show list stats, perform cute gestures, or tell you about my creator **Kishore**! Nyaa~ 🐾`,
+        expression: 'wave',
+        gesture: 'wave',
         actions: [
+          { label: "🌐 Kishore's Portfolio", actionType: "open-url", payload: "https://kishore-portfolio-2026.vercel.app" },
           { label: "📊 List Summary", query: "Give me a summary of my anime collection" },
           { label: "👀 What am I watching?", query: "What am I watching right now?" },
-          { label: "➕ How to add anime", query: "How do I add an anime?" }
+          { label: "🐾 Pet ANIBOT", actionType: "trigger-gesture", payload: "pet" }
         ]
       };
       this.appendMessage(welcome);
@@ -347,6 +472,11 @@
           });
           this.setExpression(reply.expression || 'happy');
 
+          // Trigger physical gesture if provided
+          if (reply.gesture) {
+            this.playGesture(reply.gesture, false);
+          }
+
           // Auto-trigger actions if specified (e.g. navigation)
           if (Array.isArray(reply.actions)) {
             const autoAction = reply.actions.find(a => a.autoTrigger && a.actionType);
@@ -385,7 +515,7 @@
         `;
       }
 
-      // Format markdown & safe text
+      // Format markdown & safe text (including links)
       const formattedText = this.formatMarkdown(msg.text);
 
       // Render optional compact anime cards
@@ -480,12 +610,24 @@
     }
 
     // -------------------------------------------------------------
-    // 6. ACTION EXECUTOR (Interacts with Real Website)
+    // 6. ACTION EXECUTOR (Interacts with Real Website & External Links)
     // -------------------------------------------------------------
     handleAction(actionType, payload) {
       const app = window.animeNavigator;
 
       switch (actionType) {
+        case 'open-url':
+          if (payload) {
+            window.open(payload, '_blank', 'noopener,noreferrer');
+          }
+          break;
+
+        case 'trigger-gesture':
+          if (payload) {
+            this.playGesture(payload, true);
+          }
+          break;
+
         case 'open-add-modal':
           if (app && app.addModal) {
             app.clearError(app.addErrorMsg);
@@ -608,6 +750,18 @@
       if (!text) return '';
       let escaped = this.escapeHtml(text);
 
+      // Markdown Links: [label](url)
+      escaped = escaped.replace(
+        /\[([^\]]+)\]\((https?:\/\/[^\s)]+)\)/g,
+        '<a href="$2" target="_blank" rel="noopener noreferrer" class="anibot-link">$1 <i class="fa-solid fa-arrow-up-right-from-square" style="font-size:0.75em; margin-left:2px;"></i></a>'
+      );
+
+      // Raw URLs that weren't inside markdown links:
+      escaped = escaped.replace(
+        /(^|[^"'>])(https:\/\/[^\s<]+)/g,
+        '$1<a href="$2" target="_blank" rel="noopener noreferrer" class="anibot-link">$2 <i class="fa-solid fa-arrow-up-right-from-square" style="font-size:0.75em; margin-left:2px;"></i></a>'
+      );
+
       // Bold: **text**
       escaped = escaped.replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>');
 
@@ -615,7 +769,10 @@
       escaped = escaped.replace(/\*(.*?)\*/g, '<em>$1</em>');
 
       // Inline code: `code`
-      escaped = escaped.replace(/`([^`]+)`/g, '<code style="background:rgba(0,0,0,0.5); padding:1px 4px; border-radius:4px; font-family:monospace; font-size:0.85em;">$1</code>');
+      escaped = escaped.replace(
+        /`([^`]+)`/g,
+        '<code style="background:rgba(0,0,0,0.5); padding:1px 4px; border-radius:4px; font-family:monospace; font-size:0.85em;">$1</code>'
+      );
 
       // Bullet lists: lines starting with • or - or number.
       escaped = escaped.replace(/\n•\s*(.*)/g, '<br>&bull; $1');

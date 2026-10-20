@@ -106,10 +106,11 @@
   box-shadow: 0 0 8px #10b981;
 }
 
-/* Subtle Mascot SVG Animations */
+/* Mascot SVG Micro-Animations & Natural Expressions */
 .anibot-svg-mascot {
   display: block;
   overflow: visible;
+  transition: transform 0.3s ease;
 }
 
 @keyframes anibot-float-subtle {
@@ -119,8 +120,14 @@
 
 @keyframes anibot-ear-twitch {
   0%, 90%, 100% { transform: rotate(0deg); }
-  93% { transform: rotate(-5deg); transform-origin: 20px 40px; }
+  93% { transform: rotate(-6deg); transform-origin: 20px 40px; }
   96% { transform: rotate(3deg); transform-origin: 20px 40px; }
+}
+
+@keyframes anibot-ear-twitch-right {
+  0%, 92%, 100% { transform: rotate(0deg); }
+  94% { transform: rotate(6deg); transform-origin: 80px 40px; }
+  97% { transform: rotate(-3deg); transform-origin: 80px 40px; }
 }
 
 @keyframes anibot-ahoge-sway {
@@ -128,8 +135,115 @@
   50% { transform: rotate(8deg); transform-origin: 50px 20px; }
 }
 
+/* Natural Eye Blinking */
+@keyframes anibot-natural-blink {
+  0%, 94%, 98%, 100% {
+    opacity: 0;
+    transform: scaleY(0);
+    transform-origin: 50% 48px;
+  }
+  95%, 97% {
+    opacity: 1;
+    transform: scaleY(1);
+    transform-origin: 50% 48px;
+  }
+}
+
+.anibot-eyelid {
+  animation: anibot-natural-blink 4.2s infinite ease-in-out;
+  pointer-events: none;
+}
+
+/* Waving Paw Animation */
+@keyframes anibot-paw-wave-anim {
+  0%, 100% {
+    transform: rotate(0deg);
+    transform-origin: 18px 64px;
+  }
+  25% {
+    transform: rotate(-20deg);
+    transform-origin: 18px 64px;
+  }
+  50% {
+    transform: rotate(10deg);
+    transform-origin: 18px 64px;
+  }
+  75% {
+    transform: rotate(-16deg);
+    transform-origin: 18px 64px;
+  }
+}
+
+.anibot-paw-wave {
+  animation: anibot-paw-wave-anim 0.9s ease-in-out infinite;
+}
+
+/* Cheering Paws Celebration */
+@keyframes anibot-paw-cheer-anim {
+  0%, 100% { transform: translateY(0); }
+  50% { transform: translateY(-5px); }
+}
+
+.anibot-paw-cheer-left {
+  animation: anibot-paw-cheer-anim 0.5s ease-in-out infinite alternate;
+}
+
+.anibot-paw-cheer-right {
+  animation: anibot-paw-cheer-anim 0.5s ease-in-out 0.12s infinite alternate;
+}
+
+/* Talking Mouth Motion */
+@keyframes anibot-talking-mouth-anim {
+  0%, 100% { transform: scaleY(1); transform-origin: 50px 60px; }
+  50% { transform: scaleY(1.35); transform-origin: 50px 60px; }
+}
+
+.anibot-mouth-talking-anim {
+  animation: anibot-talking-mouth-anim 0.28s ease-in-out infinite alternate;
+}
+
+/* Heart Eye Pulse */
+@keyframes anibot-heart-pulse {
+  0%, 100% { transform: scale(1); transform-origin: center; }
+  50% { transform: scale(1.18); transform-origin: center; }
+}
+
+.anibot-heart-eye-pulse {
+  animation: anibot-heart-pulse 0.9s ease-in-out infinite;
+}
+
+/* Floating Hearts & Sparkles */
+@keyframes anibot-heart-float-anim {
+  0% { transform: translateY(0) scale(0.9); opacity: 0.6; }
+  50% { transform: translateY(-5px) scale(1.1); opacity: 1; }
+  100% { transform: translateY(-9px) scale(0.95); opacity: 0; }
+}
+
+.anibot-heart-float-1 {
+  animation: anibot-heart-float-anim 2s ease-in-out infinite;
+}
+
+.anibot-heart-float-2 {
+  animation: anibot-heart-float-anim 2.2s ease-in-out 0.5s infinite;
+}
+
+/* Cheek Blush Pulsing */
+@keyframes anibot-blush-pulse {
+  0%, 100% { opacity: 0.65; transform: scale(1); }
+  50% { opacity: 0.95; transform: scale(1.08); }
+}
+
+.anibot-blush-left, .anibot-blush-right {
+  animation: anibot-blush-pulse 3s ease-in-out infinite alternate;
+  transform-origin: center;
+}
+
 .anibot-ear-left {
   animation: anibot-ear-twitch 6s ease-in-out infinite;
+}
+
+.anibot-ear-right {
+  animation: anibot-ear-twitch-right 7s ease-in-out 2.5s infinite;
 }
 
 .anibot-ahoge {
@@ -674,14 +788,223 @@
   }
 }
 
+/* ==========================================================================
+   8. ANIBOT INTERACTIVE GESTURE CLASSES & QUICK CONTROLS
+   ========================================================================== */
+
+/* Gesture: Waving */
+@keyframes anibot-gesture-wave-body {
+  0%, 100% { transform: rotate(0deg); }
+  25% { transform: rotate(-8deg); }
+  50% { transform: rotate(8deg); }
+  75% { transform: rotate(-5deg); }
+}
+
+.anibot-gesture-wave {
+  animation: anibot-gesture-wave-body 1.2s ease-in-out !important;
+}
+
+/* Gesture: Joyful Bouncing / Dancing */
+@keyframes anibot-gesture-bounce-anim {
+  0%, 100% { transform: translateY(0) scale(1); }
+  25% { transform: translateY(-14px) scale(1.05, 0.95); }
+  50% { transform: translateY(0) scale(0.95, 1.05); }
+  75% { transform: translateY(-8px) scale(1.02); }
+}
+
+.anibot-gesture-bounce {
+  animation: anibot-gesture-bounce-anim 1s cubic-bezier(0.28, 0.84, 0.42, 1) !important;
+}
+
+/* Gesture: Appreciative Nod */
+@keyframes anibot-gesture-nod-anim {
+  0%, 100% { transform: translateY(0); }
+  25% { transform: translateY(6px); }
+  50% { transform: translateY(0); }
+  75% { transform: translateY(5px); }
+}
+
+.anibot-gesture-nod {
+  animation: anibot-gesture-nod-anim 0.8s ease-in-out !important;
+}
+
+/* Gesture: Inquisitive Head Tilt */
+@keyframes anibot-gesture-tilt-anim {
+  0%, 100% { transform: rotate(0deg); }
+  50% { transform: rotate(15deg); }
+}
+
+.anibot-gesture-tilt {
+  animation: anibot-gesture-tilt-anim 1.1s ease-in-out !important;
+}
+
+/* Gesture: Soft Purring Micro-Vibration */
+@keyframes anibot-gesture-purr-anim {
+  0%, 100% { transform: translate(0, 0); }
+  25% { transform: translate(-1.5px, 1px); }
+  50% { transform: translate(1.5px, -1px); }
+  75% { transform: translate(-1px, -1px); }
+}
+
+.anibot-gesture-purr {
+  animation: anibot-gesture-purr-anim 0.22s ease-in-out 4 !important;
+}
+
+/* Gesture: Headpat / Pet Reaction */
+@keyframes anibot-gesture-pet-anim {
+  0% { transform: scale(1); }
+  25% { transform: scale(1.14, 0.86) translateY(5px); }
+  50% { transform: scale(0.95, 1.07) translateY(-5px); }
+  75% { transform: scale(1.04, 0.96); }
+  100% { transform: scale(1); }
+}
+
+.anibot-gesture-pet {
+  animation: anibot-gesture-pet-anim 0.9s cubic-bezier(0.34, 1.56, 0.64, 1) !important;
+}
+
+/* Pet Floating Heart Particle Burst */
+.anibot-pet-heart {
+  position: fixed;
+  pointer-events: none;
+  font-size: 1.3rem;
+  z-index: 1100;
+  animation: anibot-pet-heart-fly 1.25s ease-out forwards;
+}
+
+@keyframes anibot-pet-heart-fly {
+  0% {
+    opacity: 1;
+    transform: translate(0, 0) scale(0.6);
+  }
+  50% {
+    opacity: 0.95;
+    transform: translate(var(--tx, -15px), -35px) scale(1.25);
+  }
+  100% {
+    opacity: 0;
+    transform: translate(var(--tx, -25px), -75px) scale(0.8);
+  }
+}
+
+/* Gesture Quick Bar in Chat Panel */
+.anibot-gestures-bar {
+  display: flex;
+  align-items: center;
+  gap: 0.35rem;
+  padding: 0.45rem 0.85rem;
+  background: rgba(0, 0, 0, 0.4);
+  border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+  overflow-x: auto;
+  scrollbar-width: none;
+  -webkit-overflow-scrolling: touch;
+}
+
+.anibot-gestures-bar::-webkit-scrollbar {
+  display: none;
+}
+
+.anibot-gesture-pill {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.35rem;
+  background: rgba(255, 255, 255, 0.08);
+  color: #e2e8f0;
+  border: 1px solid rgba(255, 255, 255, 0.16);
+  border-radius: var(--radius-full, 9999px);
+  padding: 0.28rem 0.65rem;
+  font-size: 0.74rem;
+  font-weight: 600;
+  cursor: pointer;
+  white-space: nowrap;
+  flex-shrink: 0;
+  transition: all 0.2s ease;
+}
+
+.anibot-gesture-pill:hover {
+  background: linear-gradient(135deg, rgba(56, 189, 248, 0.25), rgba(168, 85, 247, 0.3));
+  border-color: rgba(56, 189, 248, 0.5);
+  color: #ffffff;
+  transform: translateY(-1px);
+}
+
+.anibot-gesture-pill.pill-portfolio {
+  background: linear-gradient(135deg, rgba(56, 189, 248, 0.25), rgba(168, 85, 247, 0.3));
+  border-color: rgba(56, 189, 248, 0.5);
+  color: #ffffff;
+  font-weight: 700;
+}
+
+.anibot-gesture-pill.pill-portfolio:hover {
+  background: linear-gradient(135deg, rgba(56, 189, 248, 0.45), rgba(168, 85, 247, 0.55));
+  box-shadow: 0 0 12px rgba(56, 189, 248, 0.4);
+}
+
+/* Clickable Avatar in Header with Pet Tooltip */
+.anibot-header-avatar {
+  cursor: pointer;
+  position: relative;
+  transition: transform 0.2s ease;
+}
+
+.anibot-header-avatar:hover {
+  transform: scale(1.1);
+}
+
+.anibot-header-avatar::after {
+  content: '🐾 Pet me!';
+  position: absolute;
+  bottom: -18px;
+  left: 50%;
+  transform: translateX(-50%);
+  background: rgba(0, 0, 0, 0.85);
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  color: #38bdf8;
+  font-size: 0.62rem;
+  font-weight: 700;
+  padding: 1px 5px;
+  border-radius: 4px;
+  white-space: nowrap;
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 0.2s ease;
+}
+
+.anibot-header-avatar:hover::after {
+  opacity: 1;
+}
+
+/* Markdown Link Styling */
+.anibot-msg-bubble a.anibot-link {
+  color: #38bdf8;
+  text-decoration: underline;
+  text-underline-offset: 3px;
+  font-weight: 700;
+  transition: color 0.2s ease;
+}
+
+.anibot-msg-bubble a.anibot-link:hover {
+  color: #7dd3fc;
+  text-shadow: 0 0 8px rgba(56, 189, 248, 0.4);
+}
+
 /* Respect Reduced Motion */
 @media (prefers-reduced-motion: reduce) {
   .anibot-teaser-bubble,
   .anibot-ear-left,
+  .anibot-ear-right,
   .anibot-ahoge,
   .anibot-launcher-btn,
-  .anibot-typing-dot {
+  .anibot-typing-dot,
+  .anibot-eyelid,
+  .anibot-paw-wave,
+  .anibot-paw-cheer-left,
+  .anibot-paw-cheer-right,
+  .anibot-gesture-wave,
+  .anibot-gesture-bounce,
+  .anibot-gesture-pet {
     animation: none !important;
     transition: none !important;
   }
 }
+
